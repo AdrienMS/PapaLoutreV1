@@ -34,6 +34,8 @@ cd PapaLoutre
 npm install
 ```
 
+If you want to install the app in you android device, you can put the apk located at https://github.com/AdrienMS/PapaLoutre/blob/master/apk/app-release-unsigned.apk in you phone
+
 ## Running
 
 To run in your browser:
@@ -50,7 +52,7 @@ ionic cordova run android
 
 ## Authors
 
-* **Adrien Musserotte** - *author* - [PurpleBooth](https://github.com/AdrienMS)
+* **Adrien Musserotte** - *author* - [GitHub](https://github.com/AdrienMS)
 
 ## Note
 
