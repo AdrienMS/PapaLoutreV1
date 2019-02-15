@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Chapitres
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="synchronize()">
+        <ion-icon name="cloud-done" class="done" *ngIf="isSynchronize; else NotSynchronize"></ion-icon>
+        <ng-template #NotSynchronize>
+          <ion-icon name="cloud-upload" class="upload"></ion-icon>
+        </ng-template>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="page">
+  <ion-card class="chapters">
+    <ion-card-title>Chapitres</ion-card-title>
+    <ion-card-content class="content">
+      <ion-row *ngFor="let chapter of chapters; let i = index">
+        <ion-col size="1" *ngIf="chapter.children != null && chapter.children.length > 0">
+          <ion-icon [name]="group[i].isShow ? 'arrow-dropup' : 'arrow-dropdown'" (click)="clickToggle(i)"></ion-icon>
+        </ion-col>
+        <ion-col size="9" class="col">
+          <p (click)="changeSelectedChapter(chapter)">{{chapter.name}}</p>
+        </ion-col>
+        <ion-col size="1">
+          <button fill="clear" (click)="presentPopover($event, [i])" class="options-chapter"><ion-icon name="more"></ion-icon></button>
+        </ion-col>
+        <ion-col size="12" class="col" *ngIf="group[i].isShow">
+          <app-branch-chapter [chapter]="chapter" [root]="root" (selectChapter)="changeSelectedChapter($event)"></app-branch-chapter>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-chip outline="true" color="primary" (click)="addChapter()">
+          <ion-icon name="add-circle-outline" color="primary"></ion-icon>
+          <ion-label color="primary">Ajouter un chapitre</ion-label>
+        </ion-chip>
+      </ion-row>
+      <ion-row class="chapter-desc" *ngIf="selectedChapter != null">
+        <ion-col size="12">
+          <p class="title">Titre et description</p>
+        </ion-col>
+        <ion-col size="12">
+          <ion-input type="text" [(ngModel)]="selectedChapter.name" placeholder="Titre" class="chapter-title" (ionChange)="editData()"></ion-input>
+        </ion-col>
+        <ion-col size="12">
+          <ion-textarea placeholder="Description..." [(ngModel)]="selectedChapter.description" (ionChange)="editData()"></ion-textarea>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="write-zone" *ngIf="selectedChapter != null">
+    <editor apiKey="4ah0y9piw5lyw31y6xlj40ney8yoj7unsnw65plait3xk1vy" [init]="tinyMceSettings" [(ngModel)]="selectedChapter.write" (onChange)="editData()"></editor>
+  </div>
+
+  <app-informations-chapter *ngIf="selectedChapter != null" [chapter]="selectedChapter" [parent]="root"></app-informations-chapter>
+</ion-content>

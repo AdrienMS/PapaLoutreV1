@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Chronologie
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="displayModifyOption()"><ion-icon name="settings"></ion-icon></ion-fab-button>
+      <ion-fab-button [routerLink]="['/add-timeline-period/'+story_id+'/new']"><ion-icon name="calendar"></ion-icon></ion-fab-button>
+      <ion-fab-button [routerLink]="['/add-timeline-event/'+story_id+'/new']"><ion-icon name="flag"></ion-icon></ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <div class="timeline">
+    <div class="values">
+      <div class="value" *ngFor="let value of timeline_values; let i = index" [ngStyle]="getStyleValue(i)">{{value}}</div>
+    </div>
+    <app-timeline-event *ngFor="let item of t_events; let i = index" [event_id]="i" [allEvent]="t_events" [allPeriod]="t_periods" [option]="option"></app-timeline-event>
+    <app-timeline-period *ngFor="let item of t_periods; let i = index" [period_id]="i" [allEvent]="t_events" [allPeriod]="t_periods" [option]="option"></app-timeline-period>
+  </div>
+
+
+  <!--modify option-->
+  <ion-card class="modify-option" id="modify_option">
+    <ion-card-header>
+      <ion-card-title>Options</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label position="stacked">Echelle</ion-label>
+          <ion-input type="number" [(ngModel)]="new_option.scale"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Format de la date</ion-label>
+          <ion-input type="text" [(ngModel)]="new_option.date_format"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-row>
+        <ion-col>
+          <ion-button color="danger" fill="outline" expand="full" (click)="cancelOption()">Annuler</ion-button>
+        </ion-col>
+        <ion-col *ngIf="option.id == null; else ModifyCharacterBlock">
+          <ion-button color="primary" fill="outline" expand="full" (click)="saveOption()">Sauvegarder</ion-button>
+        </ion-col>
+        <ng-template #ModifyCharacterBlock>
+          <ion-col>
+            <ion-button color="primary" fill="outline" expand="full" (click)="applyModificationsOption()">Modifier</ion-button>
+          </ion-col>
+        </ng-template>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

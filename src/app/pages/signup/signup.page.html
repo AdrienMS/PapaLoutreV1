@@ -1,0 +1,66 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="login"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="container">
+
+	<form (ngSubmit)="signup()" [formGroup]="form" class="login-form">
+    <p class="title">Papa Loutre</p>
+    <p class="slogan">Racontez-nous une histoire</p>
+		<ion-list inset class="list">
+
+			<ion-item>
+        <ion-label position="stacked">Pseudo</ion-label>
+				<ion-input type="text" formControlName="username" class="form-control" class="rounded"></ion-input>
+			</ion-item>
+      
+      <div class="validation-error">
+        <ng-container *ngFor="let validation of validation_messages.username" >
+          <div class="error-message" *ngIf="form.get('username').hasError(validation.type) && (form.get('username').dirty || form.get('username').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+
+			<ion-item>
+        <ion-label position="stacked">Adresse Mail</ion-label>
+				<ion-input type="text" formControlName="email" class="form-control" class="rounded"></ion-input>
+			</ion-item>
+      
+      <div class="validation-error">
+        <ng-container *ngFor="let validation of validation_messages.email" >
+          <div class="error-message" *ngIf="form.get('email').hasError(validation.type) && (form.get('email').dirty || form.get('email').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+
+			<ion-item>
+        <ion-label position="stacked">Mot de passe</ion-label>
+				<ion-input type="password" formControlName="password" class="rounded"></ion-input>
+			</ion-item>
+
+      <div class="validation-error">
+        <ng-container *ngFor="let validation of validation_messages.password" >
+          <div class="error-message" *ngIf="form.get('password').hasError(validation.type) && (form.get('password').dirty || form.get('password').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+		</ion-list>
+
+		<div padding-horizontal>
+			<div class="form-error">{{signupError}}</div>
+
+      <ion-button color="primary" disabled="{{!form.valid}}" (click)="signup()" expand="block" class="rounded">Sign up</ion-button>
+		</div>
+	</form>
+  <!--design-->
+  <!--<div class="content-image">
+    <ion-img src="assets/imgs/background2.PNG"></ion-img>
+  </div>-->
+</ion-content>

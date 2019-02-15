@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="timeline/{{story_id}}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Evenement</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-label position="stacked">Nom</ion-label>
+        <ion-input type="text" [(ngModel)]="event.name"></ion-input>
+      </ion-col>
+      <ion-col size="12">
+        <ion-label position="stacked">Description</ion-label>
+        <ion-textarea [(ngModel)]="event.description"></ion-textarea>
+      </ion-col>
+      <ion-col size="12">
+        <ion-label>Début</ion-label>
+        <ion-row>
+          <ion-col size="6">
+            <ion-label position="stacked">Date</ion-label>
+            <ion-row>
+              <ion-col size="4">
+                <ion-label position="stacked">Année</ion-label>
+                <ion-input type="number" [(ngModel)]="event.start.year"></ion-input>
+              </ion-col>
+              <ion-col size="4" *ngIf="event.start.format != 'YYYY'">
+                <ion-label position="stacked">Mois</ion-label>
+                <ion-input type="number" min="1" max="12" [(ngModel)]="event.start.month"></ion-input>
+              </ion-col>
+              <ion-col size="4" *ngIf="event.start.format == 'DD/MM/YYYY'">
+                <ion-label position="stacked">Jour</ion-label>
+                <ion-input type="number" min="1" max="31" [(ngModel)]="event.start.day"></ion-input>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col size="6">
+            <ion-label position="stacked">Format</ion-label>
+            <ion-select okText="Ok" cancelText="Annulé" [(ngModel)]="event.start.format">
+              <ion-select-option value="YYYY">Année</ion-select-option>
+              <ion-select-option value="MM/YYYY">Moins/Année</ion-select-option>
+              <ion-select-option value="DD/MM/YYYY">Jour/Mois/Année</ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button color="danger" fill="outline" expand="full" (click)="cancel()">Annuler</ion-button>
+      </ion-col>
+      <ion-col *ngIf="event.id == null; else ModifyCharacterBlock">
+        <ion-button color="primary" fill="outline" expand="full" (click)="save()">Sauvegarder</ion-button>
+      </ion-col>
+      <ng-template #ModifyCharacterBlock>
+        <ion-col>
+          <ion-button color="primary" fill="outline" expand="full" (click)="applyModifications()">Modifier</ion-button>
+        </ion-col>
+      </ng-template>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

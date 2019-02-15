@@ -1,0 +1,205 @@
+ion-content {
+    overflow-y: scroll;
+}
+
+.content-story {
+    --padding-start: 0;
+    --padding-end: 0;
+    .story-col {
+        height: calc(calc(6 / var(--ion-grid-columns, 12)) * 100vw);
+        padding: 0;
+    }
+}
+
+ion-card.history {
+        /* background-image: url(logo.png); */
+    /* background-position: center; */
+    /* background-repeat: no-repeat; */
+    /* background-size: contain; */
+    cursor: pointer;
+    /* overflow: hidden; */
+    height: 86%;
+    background-color: black;
+    .img-background {
+        width: 100%;
+        position: absolute;
+        -o-object-position: center;
+        object-position: center;
+        -o-object-fit: cover;
+        object-fit: cover;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        margin-top: 50%;
+    }
+    .title-card {
+        background-color: #ffffff7a;
+        height: 100%;
+        text-align: center;
+        color: white;
+        padding: 0;
+        padding-top: 50%;
+        p {
+            font-size: 20px;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+            transform: translateY(-50%);
+        }
+    }
+}
+
+.action-button {
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.create-history {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        background-color: #00000070;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        .container {
+            position: fixed;
+            width: 50%;
+            left: 25%;
+            margin-left: 0;
+            background-color: white;
+            .input-file {
+                position: absolute;
+                top: 0; left: 0;
+                width: 225px;
+                padding: 14px 0;
+                opacity: 0;
+                cursor: pointer;
+                text-align: center;
+            }
+            .input-file-trigger {
+                display: block;
+                background: #39D2B4;
+                color: #fff;
+                font-size: 1em;
+                transition: all .4s;
+                cursor: pointer;
+                margin: 0;
+                text-align: center;
+            }
+        
+            /* quelques styles d'interactions */
+            .input-file:hover + .input-file-trigger,
+            .input-file:focus + .input-file-trigger,
+            .input-file-trigger:hover,
+            .input-file-trigger:focus {
+                background: #34495E;
+                color: #39D2B4;
+            }
+            
+            /* styles du retour visuel */
+            .file-return {
+                margin: 0;
+            }
+            .file-return:not(:empty) {
+                margin: 1em 0;
+            }
+            .file-return {
+                font-style: italic;
+                font-size: .9em;
+                font-weight: bold;
+            }
+            /* on complète l'information d'un contenu textuel
+                uniquement lorsque le paragraphe n'est pas vide */
+            .file-return:not(:empty):before {
+            content: "Selected file: ";
+                font-style: normal;
+                font-weight: normal;
+            }
+        }
+    }
+}
+.image-list {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        background-color: #00000070;
+        .container {
+            width: 90vw;
+            height: 90vh;
+            background-color: white;
+            position: fixed;
+            top: 0;
+            left: 5vw;
+            ion-row.list {
+                overflow-y: scroll;
+                height: 81vh;
+            }
+            .img {
+                height: 10vh;
+                cursor: pointer;
+            }
+            .selected {
+                .img {
+                    border: 2px solid green;
+                }
+            }
+            .buttons {
+                position: fixed;
+                bottom: 4vh;
+                width: 89vw;
+            }
+        }
+    }
+}
+
+.delete {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        background-color: #00000070;
+        .container {
+            width: 50vw;
+            background-color: white;
+            position: fixed;
+            top: 0;
+            left: 25vw;
+        }
+    }
+}
+
+@media only screen and (max-width : 768px) {
+    .create-history {
+        &.show {
+            .container {
+                position: fixed;
+                width: 80%;
+                left: 10%;
+                background-color: white;
+                max-height: 76vh;
+                overflow-y: scroll;
+            }
+        }
+    }
+    .delete {
+        &.show {
+            .container {
+                width: 90vw;
+                left: 5vw;
+            }
+        }
+    }
+}

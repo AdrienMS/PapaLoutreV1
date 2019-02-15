@@ -1,0 +1,51 @@
+.add-section-box {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        background-color: #00000070;
+        z-index: 2;
+        .container {
+            position: fixed;
+            width: 80vw;
+            left: 10vw;
+            background-color: white;
+        }
+    }
+}
+
+.add-field {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        background-color: #00000070;
+        z-index: 2;
+        .container {
+            position: fixed;
+            width: 80vw;
+            left: 10vw;
+            background-color: white;
+        }
+    }
+}
+
+.search-block {
+    .title {
+        margin: 0;
+    }
+    .search {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        color: transparent;
+    }
+}

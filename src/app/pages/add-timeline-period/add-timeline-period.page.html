@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="timeline/{{story_id}}"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Période</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-label position="stacked">Nom</ion-label>
+        <ion-input type="text" [(ngModel)]="period.name"></ion-input>
+      </ion-col>
+      <ion-col size="12">
+        <ion-label position="stacked">Description</ion-label>
+        <ion-textarea [(ngModel)]="period.description"></ion-textarea>
+      </ion-col>
+      <ion-col size="12">
+        <ion-label>Début</ion-label>
+        <ion-row>
+          <ion-col size="6">
+            <ion-label position="stacked">Date</ion-label>
+            <ion-row>
+              <ion-col size="4">
+                <ion-label position="stacked">Année</ion-label>
+                <ion-input type="number" [(ngModel)]="period.start.year"></ion-input>
+              </ion-col>
+              <ion-col size="4" *ngIf="period.start.format != 'YYYY'">
+                <ion-label position="stacked">Mois</ion-label>
+                <ion-input type="number" min="1" max="12" [(ngModel)]="period.start.month"></ion-input>
+              </ion-col>
+              <ion-col size="4" *ngIf="period.start.format == 'DD/MM/YYYY'">
+                <ion-label position="stacked">Jour</ion-label>
+                <ion-input type="number" min="1" max="31" [(ngModel)]="period.start.day"></ion-input>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col size="6">
+            <ion-label position="stacked">Format</ion-label>
+            <ion-select okText="Ok" cancelText="Annulé" [(ngModel)]="period.start.format">
+              <ion-select-option value="YYYY">Année</ion-select-option>
+              <ion-select-option value="MM/YYYY">Moins/Année</ion-select-option>
+              <ion-select-option value="DD/MM/YYYY">Jour/Mois/Année</ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col size="12">
+        <ion-label>Fin</ion-label>
+        <ion-row>
+          <ion-col size="6">
+            <ion-label position="stacked">Date</ion-label>
+            <ion-row>
+              <ion-col size="4">
+                <ion-label position="stacked">Année</ion-label>
+                <ion-input type="number" [(ngModel)]="period.end.year"></ion-input>
+              </ion-col>
+              <ion-col size="4" *ngIf="period.end.format != 'YYYY'">
+                <ion-label position="stacked">Mois</ion-label>
+                <ion-input type="number" min="1" max="12" [(ngModel)]="period.end.month"></ion-input>
+              </ion-col>
+              <ion-col size="4" *ngIf="period.end.format == 'DD/MM/YYYY'">
+                <ion-label position="stacked">Jour</ion-label>
+                <ion-input type="number" min="1" max="31" [(ngModel)]="period.end.day"></ion-input>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col size="6">
+            <ion-label position="stacked">Format</ion-label>
+            <ion-select okText="Ok" cancelText="Annulé" [(ngModel)]="period.end.format">
+              <ion-select-option value="YYYY">Année</ion-select-option>
+              <ion-select-option value="MM/YYYY">Moins/Année</ion-select-option>
+              <ion-select-option value="DD/MM/YYYY">Jour/Mois/Année</ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button color="danger" fill="outline" expand="full" (click)="cancel()">Annuler</ion-button>
+      </ion-col>
+      <ion-col *ngIf="period.id == null; else ModifyCharacterBlock">
+        <ion-button color="primary" fill="outline" expand="full" (click)="save()">Sauvegarder</ion-button>
+      </ion-col>
+      <ng-template #ModifyCharacterBlock>
+        <ion-col>
+          <ion-button color="primary" fill="outline" expand="full" (click)="applyModifications()">Modifier</ion-button>
+        </ion-col>
+      </ng-template>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

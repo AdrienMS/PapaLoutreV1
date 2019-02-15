@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "73487396790",
+    "firebase_url": "https://papaloutre-dadc5.firebaseio.com",
+    "project_id": "papaloutre-dadc5",
+    "storage_bucket": "papaloutre-dadc5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73487396790:android:ff734922be28cf9f",
+        "android_client_info": {
+          "package_name": "com.papaloutre.papaloutreapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73487396790-lig7jn36fvi6q6qm1141f25ecoknoe58.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcfjfY-UpdvzP_Hf4eCc8LoxGMWjD3Ppw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

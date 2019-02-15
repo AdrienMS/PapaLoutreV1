@@ -1,0 +1,235 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Personnages
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="displayCharacterSheet(null, null)">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-grid class="characters">
+    <ion-row class="list">
+      <ng-container *ngFor="let character of charactersStory; let i = index">
+        <ion-col size="2" class="item" *ngIf="screenSize > 768; else mobileBlock">
+          <ion-card class="card">
+            <ion-img (click)="modifyCharacter(character, i)" src="assets/imgs/logo.png" class="img" *ngIf="characterImages[i][0][2] == undefined || characterImages[i][0][2] == null || characterImages[i][0][2] == ''; else ImageCharacterBlock"></ion-img>
+            <ng-template #ImageCharacterBlock>
+              <ion-img (click)="modifyCharacter(character, i)" [src]="characterImages[i][0][2]" class="img" id="character_card_{{i}}"></ion-img>
+            </ng-template>
+            <ion-card-content (click)="modifyCharacter(character, i)">
+              {{character.character[0].items[0].value}} {{character.character[0].items[1].value}}
+            </ion-card-content>
+            <ion-icon class="icon" name="trash" (click)="deleteCharacter(i)"></ion-icon>
+          </ion-card>
+        </ion-col>
+        <ng-template #mobileBlock>
+          <ion-col size="4" class="item">
+            <ion-card class="card">
+              <ion-img (click)="modifyCharacter(character, i)" src="assets/imgs/logo.png" class="img" *ngIf="characterImages[i][0][2] == undefined || characterImages[i][0][2] == null || characterImages[i][0][2] == ''; else ImageCharacterMobileBlock"></ion-img>
+              <ng-template #ImageCharacterMobileBlock>
+                <ion-img (click)="modifyCharacter(character, i)" [src]="characterImages[i][0][2]" class="img" id="character_card_{{i}}"></ion-img>
+              </ng-template>
+              <ion-card-content (click)="modifyCharacter(character, i)">
+              {{character.character[0].items[0].value}} {{character.character[0].items[1].value}}
+              </ion-card-content>
+              <ion-icon class="icon" name="trash" (click)="deleteCharacter(i)"></ion-icon>
+            </ion-card>
+          </ion-col>
+        </ng-template>
+      </ng-container>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid class="character-sheet" id="character_sheet">
+
+    <ion-row *ngFor="let section of sections; let i = index" lines="none" class="section">
+      <ion-col>
+        <ion-row class="content">
+          <ion-title class="name" (click)="toggleGroup(section)">
+            <ion-icon class="icon" [name]="isGroupShown(section) ? 'arrow-dropup' : 'arrow-dropdown'"></ion-icon>
+            {{section.name}}
+          </ion-title>
+          <ng-container *ngIf="i > 0">
+            <ion-icon class="icon" name="create" (click)="DisplayAddSection(section.name,i)"></ion-icon>
+            <ion-icon class="icon" name="trash" (click)="deleteSection(i)"></ion-icon>
+          </ng-container>
+        </ion-row>
+        <ion-row class="content" *ngIf="isGroupShown(section)">
+          <ion-col *ngFor="let item of section.items; let k = index" size="{{item.size}}" class="item">
+            
+            <ion-label position="stacked">
+              {{item.label}}
+              <ion-button *ngIf="item.canModify" class="modify-button" size="small" fill="clear" slot="end" (click)="clickModify(item, i, k)">
+                <ion-icon class="icon" name="create"></ion-icon>
+              </ion-button>
+            </ion-label>
+
+            <ng-container [ngSwitch]="item.type">
+
+              <ion-toggle *ngSwitchCase="'toggle'" [(ngModel)]="item.value"></ion-toggle>
+
+              <div *ngSwitchCase="'file'">
+                <ion-img src="assets/imgs/logo.png" id="field_image_{{getIndexSearch(i, k)}}" *ngIf="modifyCharacterIndex == null; else LoadImageBlock"></ion-img>
+                <ng-template #LoadImageBlock>
+                  <ion-img [src]="characterImages[modifyCharacterIndex][0][2]" id="field_image_{{getIndexSearch(i, k)}}"></ion-img>
+                </ng-template>
+                <input type="file" name="{{item.label}}" (change)="addFile($event, item, getIndexSearch(i, k))">
+              </div>
+
+              <div *ngSwitchCase="'search'" class="autocomplete">
+                <ion-row>
+                  <ion-col>
+                    <ion-searchbar
+                      [(ngModel)]="searchText[getIndexSearch(i, k)]"
+                      (ionFocus)="initSearch(getIndexSearch(i, k))"
+                      (ionChange)="setFilteredItems(item, getIndexSearch(i, k))"
+                      debounce=0>
+                      <ion-list class="search-bar-values" id="searchbar_values_{{getIndexSearch(i, k)}}">
+                        <ion-item *ngFor="let res of searchList[getIndexSearch(i, k)].items" (click)="addToList(item, res.value, getIndexSearch(i, k))">
+                          {{res.value}}
+                        </ion-item>
+                      </ion-list>
+                    </ion-searchbar>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="content-value">
+                  <ion-col *ngFor="let value of item.value; let j = index">
+                    <ion-chip outline="true" color="primary" (click)="deleteValue(item, j)">
+                      <ion-label color="primary">{{value}}</ion-label>
+                      <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+                    </ion-chip>
+                  </ion-col>
+                </ion-row>
+              </div>
+
+              <ion-input *ngSwitchDefault [type]="item.type" [(ngModel)]="item.value"></ion-input>
+            </ng-container>
+
+          </ion-col>
+
+          <ion-col size="12">
+            <ion-chip outline="true" color="primary" (click)="showAddField(i)">
+              <ion-icon name="add-circle-outline" color="primary"></ion-icon>
+              <ion-label color="primary">Ajouter un champs</ion-label>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="add-section">
+      <ion-col>
+        <ion-chip outline="true" color="primary" (click)="DisplayAddSection(null,null)">
+          <ion-icon name="add-circle-outline" color="primary"></ion-icon>
+          <ion-label color="primary">Ajouter une section</ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button color="danger" fill="outline" expand="full" (click)="hideCharacterSheet()">Annuler</ion-button>
+      </ion-col>
+      <ion-col *ngIf="!isModifyCharacter; else ModifyCharacterBlock">
+        <ion-button color="primary" fill="outline" expand="full" (click)="save()">Sauvegarder</ion-button>
+      </ion-col>
+      <ng-template #ModifyCharacterBlock>
+        <ion-col>
+          <ion-button color="primary" fill="outline" expand="full" (click)="applyModifications()">Modifier</ion-button>
+        </ion-col>
+      </ng-template>
+    </ion-row>
+  </ion-grid>
+
+  <div class="add-section-box" id="add_section_box">
+    <ion-card class="container">
+      <ion-card-title>Ajouter une section</ion-card-title>
+      <ion-card-content>
+        <ion-row>
+          <ion-col>
+            <ion-label position="stacked">Nom</ion-label>
+            <ion-input type="text" [(ngModel)]="addSectionField"></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button color="danger" fill="outline" expand="full" (click)="cancelSection()">Annuler</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button color="primary" fill="outline" expand="full" (click)="addSection()">Ajouter</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="add-field" id="add_field">
+    <ion-card class="container">
+      <ion-card-title>Ajouter un champs</ion-card-title>
+      <ion-grid class="fields">
+        <ion-row class="name">
+          <ion-col>
+            <ion-label position="stacked">Nom du champs</ion-label>
+            <ion-input type="text" [(ngModel)]="addField.label"></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row class="type">
+          <ion-col>
+            <ion-label position="stacked">Type du champs</ion-label>
+            <ion-select multiple="false" cancelText="Annuler" okText="Ok" [(ngModel)]="addField.type">
+              <ion-select-option value="text">Texte</ion-select-option>
+              <ion-select-option value="number">Nombre</ion-select-option>
+              <ion-select-option value="file">Image</ion-select-option>
+              <ion-select-option value="date">Date</ion-select-option>
+              <ion-select-option value="toggle">Bouton à bascule</ion-select-option>
+              <ion-select-option value="search">Recherche dans une liste de champs</ion-select-option>
+              <ion-select-option value="textarea">Champ texte</ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="addField.type === 'search'">
+          <ion-col>
+            <ion-label position="stacked">Valeurs du champs</ion-label>
+            <ion-list class="values-search-list">
+              <ion-item *ngFor="let searchValue of addField.searchValues">
+                <ion-input type="text" [(ngModel)]="searchValue.value"></ion-input>
+              </ion-item>
+            </ion-list>
+            <ion-chip outline="true" color="primary" (click)="addToSearchValue()">
+              <ion-icon name="add-circle-outline" color="primary"></ion-icon>
+              <ion-label color="primary">Ajouter un champs</ion-label>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+        <ion-row class="size">
+          <ion-col>
+            <ion-label position="stacked">Taille du champs</ion-label>
+            <ion-range pin="true" min="1" max="12" step="1" snaps="true" color="secondary" [(ngModel)]="addField.size"></ion-range>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button color="danger" fill="outline" expand="full" (click)="CancelFieldToSection()">Annuler</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button *ngIf="!isModify; else ModifyFieldBlock" color="primary" fill="outline" expand="full" (click)="addFieldToSection()">Ajouter</ion-button>
+            <ng-template #ModifyFieldBlock>
+              <ion-button color="primary" fill="outline" expand="full" (click)="modifyFieldToSection()">Modifier</ion-button>
+            </ng-template>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </div>
+
+</ion-content>

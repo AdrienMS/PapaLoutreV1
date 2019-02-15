@@ -1,0 +1,10 @@
+<ion-card class="place-card">
+  <ion-card-content class="name">
+    <button fill="clear" (click)="presentPopover($event)" class="options-place"><ion-icon name="more"></ion-icon></button>
+    <p>{{place.sections[0].informations[0].value}}</p>
+  </ion-card-content>
+  <!--<ion-img class="img" [src]="imageCharacter[character.index_img]" *ngIf="imageCharacter[character.index_img] != null; else ImgBlock"></ion-img>
+  <ng-template #ImgBlock>-->
+    <ion-img class="img" [src]="image"></ion-img>
+  <!--</ng-template>-->
+</ion-card>

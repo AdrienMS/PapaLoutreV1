@@ -1,0 +1,67 @@
+.informations {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 20vw;
+    background-color: white;
+    margin: 0;
+    overflow-y: scroll;
+    .content {
+        padding: 0;
+        height: 100%;
+        .container {
+            .information {
+                --padding-end: 0;
+                --padding-start: 0;
+                .block {
+                    width: 100%;
+                    .card {
+                        background-color: white;
+                        height: calc(calc(6 / var(--ion-grid-columns, 12)) * 9vw);
+                        .img {
+                            position: absolute;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            background-color: black;
+                            height: calc(calc(6 / var(--ion-grid-columns, 12)) * 9vw);
+                        }
+                        .name {
+                            height: 100%;
+                            text-align: center;
+                            background-color: #00000061;
+                            color: white;
+                            padding: 0;
+                        }
+                    }
+                }
+            }
+            .input {
+                --padding-bottom: 0;
+                --padding-end: 0;
+                --padding-start: 0;
+                --padding-top: 0;
+            }
+        }
+    }
+    .dates {
+        padding-bottom: 6px;
+        margin-bottom: 11px;
+        border-bottom: 1px solid gainsboro;
+        .label {
+            margin: 0 0 0 10px;
+            font-size: 16px;
+            color: black;
+        }
+    }
+    .progress_bar {
+        .label {
+            margin: 0 0 0 15px;
+            font-size: 16px;
+            color: black;
+        }
+        .range {
+            padding-top: 0;
+        }
+    }
+}

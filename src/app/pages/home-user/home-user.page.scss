@@ -1,0 +1,82 @@
+ion-content {
+    background-color:  #757575;
+}
+
+@media only screen and (min-device-width : 768px) {
+    ion-content {
+        left: 100px;
+        width: calc(100% - 100px);
+        h2.title {
+            text-align: center;
+            color: white;
+        }
+        h3.title {
+            text-align: center;
+            color: white;
+        }
+        .histories {
+            background-color: #bdbdbd;
+            width: 50vw;
+            height: 94vh;
+            padding: 1vh 1vw;
+            margin: 0 0.5vw;
+            .container-histories {
+                overflow-y: scroll;
+                height: 85vh;
+                ion-card {
+                    width: 19%;
+                    margin: 0 auto;
+                    background-color: white;
+                    display: inline-block;
+                    cursor: pointer;
+                    -webkit-transition: all 0.3s cubic-bezier(0.3, 0, 0, 1.3);
+                    .hover {
+                        display: none;
+                    }
+                    &:hover {
+                        -webkit-transition: all 0.3s cubic-bezier(0.3, 0, 0, 1.3);
+                        .hover {
+                            display: block;
+                            position: absolute;
+                            top: 0;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0,0,0,0.6);
+                            p {
+                                color: white;
+                                margin-top: 50%;
+                                transform: translateY(50%);
+                                text-align: center;
+                                width: 60%;
+                                margin-left: 20%;
+                                border: 1px solid white;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .favorites {
+            background-color: #bdbdbd;
+            width: 50vw;
+            height: 94vh;
+            padding: 1vh 1vw;
+            margin: 0 0.5vw;
+            div {
+                &.characters {
+    
+                }
+                &.links {
+    
+                }
+                &.places {
+    
+                }
+                &.events {
+    
+                }
+
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+<ng-container *ngIf="chapter.children != null">
+  <ion-row *ngFor="let child of chapter.children; let i = index">
+    <ion-col size="1" *ngIf="child.children != null && child.children.length > 0">
+      <ion-icon [name]="group[i].isShow ? 'arrow-dropup' : 'arrow-dropdown'" (click)="clickToggle(i)"></ion-icon>
+    </ion-col>
+    <ion-col size="9" class="col">
+      <!--<ion-input type="text" [(ngModel)]="child.name" class="input"></ion-input>-->
+      <p (click)="changeSelectedChapter(child)">{{child.name}}</p>
+    </ion-col>
+    <ion-col size="1">
+      <button fill="clear" (click)="presentPopover($event, child.i_parents)" class="options-chapter"><ion-icon name="more"></ion-icon></button>
+    </ion-col>
+    <ion-col size="12" class="col" *ngIf="group[i].isShow">
+      <app-branch-chapter [chapter]="child" [root]="root" (selectChapter)="changeSelectedChapter($event)"></app-branch-chapter>
+    </ion-col>
+  </ion-row>
+</ng-container>

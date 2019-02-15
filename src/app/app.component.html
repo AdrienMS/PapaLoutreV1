@@ -1,0 +1,29 @@
+<ion-app>
+    <ion-menu>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title *ngIf="currentUser === null; else connectedBlock">Menu</ion-title>
+          <ng-template #connectedBlock>
+            <ion-menu-toggle auto-hide="true">
+              <ion-title [routerDirection]="'root'" [routerLink]="['/profil']" style="cursor: pointer;">
+                {{currentUser.username}}
+              </ion-title>
+            </ion-menu-toggle>
+          </ng-template>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-menu-toggle auto-hide="true" *ngFor="let p of appPages">
+            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>
+                {{p.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet main></ion-router-outlet>
+</ion-app>

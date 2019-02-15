@@ -1,0 +1,10 @@
+.line-link {
+    position:absolute;
+    z-index: 1;
+    height: 3px;
+    transform-origin : 0 0;
+    cursor: pointer;
+    &:hover {
+        height: 5px;
+    }
+}

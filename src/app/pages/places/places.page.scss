@@ -1,0 +1,21 @@
+.draggable-zone {
+    overflow: scroll;
+    height: 93vh;
+}
+
+.place {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+}
+
+.line-link {
+    position:absolute;
+    z-index: 1;
+    height: 3px;
+    transform-origin : 0 0;
+    cursor: pointer;
+    &:hover {
+        height: 5px;
+    }
+}

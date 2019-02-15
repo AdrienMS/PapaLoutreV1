@@ -1,0 +1,187 @@
+<ion-card class="informations">
+  <ion-card-title>Informations</ion-card-title>
+  <ion-card-content class="content">
+    <ion-list *ngIf="chapter.informations != null && chapter.informations != []; else NoInformationsBlock" class="container">
+      <ion-item class="information" *ngFor="let info of chapter.informations; let i = index">
+        <ion-row class="block">
+
+          <ion-col size="2">
+            <ion-icon [name]="group[i].isShow ? 'arrow-dropup' : 'arrow-dropdown'" (click)="clickToggle(i)"></ion-icon>
+          </ion-col>
+
+          <ion-col size="9">
+              <ion-input type="text" [(ngModel)]="info.label" class="input" *ngIf="isEdit[i]; else NoEditLabelBlock" (ionChange)="editData()"></ion-input>
+              <ng-template #NoEditLabelBlock>
+                <p>{{info.label}}</p>
+              </ng-template>
+          </ion-col>
+
+          <ion-col size="1">
+            <button fill="clear" (click)="presentPopover($event, i)" class="options-chapter"><ion-icon name="more"></ion-icon></button>
+          </ion-col>
+
+          <ion-col size="12" *ngIf="isEdit[i]">
+            <ion-select cancelText="Annuler" okText="Ok" [(ngModel)]="info.type" (ionChange)="onChangeType(i)">
+              <ion-select-option value="characters">Personnages</ion-select-option>
+              <ion-select-option value="places">Lieux</ion-select-option>
+              <ion-select-option value="events">Evénements</ion-select-option>
+              <ion-select-option value="text">Text</ion-select-option>
+              <ion-select-option value="date">Date</ion-select-option>
+              <ion-select-option value="number">Nombre</ion-select-option>
+              <ion-select-option value="toggle">Bouton à bascule</ion-select-option>
+            </ion-select>
+          </ion-col>
+
+          <ion-col size="12">
+            <ng-container [ngSwitch]="info.type" *ngIf="group[i].isShow">
+
+              <ion-toggle *ngSwitchCase="'toggle'" [(ngModel)]="info.value" (ionChange)="editData()"></ion-toggle>
+
+              <!--<div *ngSwitchCase="'file'">
+                <ion-img
+                  src="assets/imgs/logo.png"
+                  id="field_image_{{i_section}}_{{i_info}}"
+                  *ngIf="ImagesToLoad == null || ImagesToLoad == ''; else LoadImageBlock"
+                ></ion-img>
+                  <ng-template #LoadImageBlock>
+                    <ion-img [src]="ImagesToLoad[i_section][i_info]" id="field_image_{{i_section}}_{{i_info}}"></ion-img>
+                  </ng-template>
+                  <input type="file" name="{{information.label}}" (change)="addFile($event, information, i_section, i_info)">
+              </div>-->
+
+              <div *ngSwitchCase="'characters'">
+                <ion-select multiple="true" cancelText="Annuler" okText="Ok" *ngIf="characters != []; else NoCharacterBlock" [(ngModel)]="info.value" (ionChange)="onSelectCharacterChange(i)">
+                  <ion-select-option *ngFor="let character of characters; let c = index" [value]="character.id">{{character.character[0].items[0].value}} {{character.character[0].items[1].value}}</ion-select-option>
+                </ion-select>
+                <ng-template #NoCharacterBlock>Vous n'avez pas de personnages</ng-template>
+                <ion-row class="character-card">
+                  <ion-col size="6" *ngFor="let val of info.value; let v = index">
+                    <ion-card *ngIf="getCharacterFromId(val); let character" class="card">
+                      <ion-img class="img" *ngIf="imgCharacters[i][v] != null; else ImgBlock" [src]="imgCharacters[i][v]"></ion-img>
+                      <ng-template #ImgBlock>
+                        <ion-img class="img" src="assets/imgs/logo.png"></ion-img>
+                      </ng-template>
+                      <ion-card-content class="name">
+                        <p>{{character.character[0].items[0].value}} {{character.character[0].items[1].value}}</p>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
+              </div>
+
+              <div *ngSwitchCase="'places'">
+                <ion-select multiple="true" cancelText="Annuler" okText="Ok" *ngIf="places != []; else NoPlacesBlock" [(ngModel)]="info.value" (ionChange)="onSelectPlaceChange(i)">
+                  <ion-select-option *ngFor="let place of places; let c = index" [value]="place.id">{{place.sections[0].informations[0].value}}</ion-select-option>
+                </ion-select>
+                <ng-template #NoPlacesBlock>Vous n'avez pas de lieux</ng-template>
+                <ion-row class="place-card">
+                  <ion-col size="6" *ngFor="let val of info.value; let v = index">
+                    <ion-card *ngIf="getPlaceFromId(val); let place" class="card">
+                      <ion-img class="img" *ngIf="imgPlaces[i][v] != null; else ImgBlock" [src]="imgPlaces[i][v]"></ion-img>
+                      <ng-template #ImgBlock>
+                        <ion-img class="img" src="assets/imgs/logo.png"></ion-img>
+                      </ng-template>
+                      <ion-card-content class="name">
+                        <p>{{place.sections[0].informations[0].value}}</p>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
+              </div>
+
+              <div *ngSwitchCase="'events'">
+              
+              </div>
+
+              <ion-input *ngSwitchDefault [type]="info.type" [(ngModel)]="info.value" (ionChange)="editData()"></ion-input>
+            </ng-container>
+          </ion-col>
+          <ion-col size="12" *ngIf="isEdit[i]">
+            <ion-button shape="round" fill="outline" (click)="validEdit(i)">Valider</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+    <ng-template #NoInformationsBlock>
+      Aucune information sur ce chapitre
+    </ng-template>
+    <ion-chip outline="true" color="primary" (click)="addNewInformation()">
+      <ion-icon name="add-circle-outline" color="primary"></ion-icon>
+      <ion-label color="primary">Ajouter une information</ion-label>
+    </ion-chip>
+    <div class="dates">
+      <ion-row>
+        <ion-col size="10">
+          <p class="label">Dates</p>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon [name]="dateIsShow ? 'arrow-dropup' : 'arrow-dropdown'" (click)="clickToggleDate(0)"></ion-icon>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="dateIsShow">
+        <ion-col size="12">
+          <ion-label position="stacked">Début</ion-label>
+          <ion-icon [name]="SEShow[0] ? 'arrow-dropup' : 'arrow-dropdown'" (click)="clickToggleDate(1)"></ion-icon>
+        </ion-col>
+        <ion-col size="6" *ngIf="SEShow[0]">
+          <ion-row>
+            <ion-col size="12">
+              <ion-label position="stacked">Année</ion-label>
+              <ion-input type="number" [(ngModel)]="chapter.start.year" (ionChange)="editData()"></ion-input>
+            </ion-col>
+            <ion-col size="12" *ngIf="chapter.start.format != 'YYYY'">
+              <ion-label position="stacked">Mois</ion-label>
+              <ion-input type="number" min="1" max="12" [(ngModel)]="chapter.start.month" (ionChange)="editData()"></ion-input>
+            </ion-col>
+            <ion-col size="12" *ngIf="chapter.start.format == 'DD/MM/YYYY'">
+              <ion-label position="stacked">Jour</ion-label>
+              <ion-input type="number" min="1" max="31" [(ngModel)]="chapter.start.day" (ionChange)="editData()"></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="6" *ngIf="SEShow[0]">
+          <ion-label position="stacked">Format</ion-label>
+          <ion-select okText="Ok" cancelText="Annulé" [(ngModel)]="chapter.start.format" (ionChange)="editData()">
+            <ion-select-option value="YYYY">Année</ion-select-option>
+            <ion-select-option value="MM/YYYY">Moins/Année</ion-select-option>
+            <ion-select-option value="DD/MM/YYYY">Jour/Mois/Année</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="dateIsShow">
+        <ion-col size="12">
+          <ion-label position="stacked">Fin</ion-label>
+          <ion-icon [name]="SEShow[1] ? 'arrow-dropup' : 'arrow-dropdown'" (click)="clickToggleDate(2)"></ion-icon>
+        </ion-col>
+        <ion-col size="6" *ngIf="SEShow[1]">
+          <ion-row>
+            <ion-col size="12">
+              <ion-label position="stacked">Année</ion-label>
+              <ion-input type="number" [(ngModel)]="chapter.end.year" (ionChange)="editData()"></ion-input>
+            </ion-col>
+            <ion-col size="12" *ngIf="chapter.end.format != 'YYYY'">
+              <ion-label position="stacked">Mois</ion-label>
+              <ion-input type="number" min="1" max="12" [(ngModel)]="chapter.end.month" (ionChange)="editData()"></ion-input>
+            </ion-col>
+            <ion-col size="12" *ngIf="chapter.end.format == 'DD/MM/YYYY'">
+              <ion-label position="stacked">Jour</ion-label>
+              <ion-input type="number" min="1" max="31" [(ngModel)]="chapter.end.day" (ionChange)="editData()"></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="6" *ngIf="SEShow[1]">
+          <ion-label position="stacked">Format</ion-label>
+          <ion-select okText="Ok" cancelText="Annulé" [(ngModel)]="chapter.end.format" (ionChange)="editData()">
+            <ion-select-option value="YYYY">Année</ion-select-option>
+            <ion-select-option value="MM/YYYY">Moins/Année</ion-select-option>
+            <ion-select-option value="DD/MM/YYYY">Jour/Mois/Année</ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div class="progress_bar">
+      <p class="label">Progression</p>
+      <ion-range class="range" min="0" max="100" step="1" pin="true" color="secondary" [(ngModel)]="chapter.progression" (ionChange)="editData()"></ion-range>
+    </div>
+  </ion-card-content>
+</ion-card>

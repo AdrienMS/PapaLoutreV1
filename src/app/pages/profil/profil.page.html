@@ -1,0 +1,133 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Profil
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="displayCreateHistory()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  
+  <ion-row class="content-story">
+    <ion-col size="6" *ngFor="let key of keys; let i = index" id="history_{{key}}" class="story-col">
+      <ion-card class="history" (click)="goToStory(key)">
+        <ion-img *ngIf="backgroundImages[key] != null" src="{{backgroundImages[key]}}" class="img-background"></ion-img>
+        <ion-card-content class="title-card">
+          <p>{{files[key].title}}</p>
+        </ion-card-content>
+      </ion-card>
+      <div class="action-button">
+        <ion-button fill="clear" slot="end" (click)="clickDelete(files[key])"><ion-icon name="trash"></ion-icon></ion-button>
+        <ion-button fill="clear" slot="end" (click)="clickModify(files[key])"><ion-icon name="create"></ion-icon></ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+ 
+  <!--<ion-fab right bottom>
+    <input type="file" (change)="addImage($event)" />
+  </ion-fab>-->
+  <div class="create-history" id="create_new_story">
+    <ion-card class="container">
+      <ion-title>Nouvelle Histoire</ion-title>
+      <form (ngSubmit)="createHistory()" [formGroup]="createHistoryForm">
+
+        <ion-list inset>
+
+          <ion-item>
+            <ion-input type="text" placeholder="Titre" formControlName="title" class="form-control" id="create-title" [(ngModel)]="createHistoryForm.value.title"></ion-input>
+          </ion-item>
+
+          <div class="validation-error">
+            <ng-container *ngFor="let validation of validation_messages.title" >
+              <div class="error-message" *ngIf="createHistoryForm.get('title').hasError(validation.type) && (createHistoryForm.get('title').dirty || createHistoryForm.get('title').touched)">
+                {{ validation.message }}
+              </div>
+            </ng-container>
+          </div>
+
+          <ion-item>
+            <ion-input type="text" placeholder="Description" formControlName="description" class="form-control" id="create-desc" [(ngModel)]="createHistoryForm.value.description"></ion-input>
+          </ion-item>
+
+          <!--<ion-item>
+            <input type="file" (change)="addImage($event)" />
+          </ion-item>-->
+
+          <p>Sélectionner une image</p>
+          <ion-item>
+            <ion-row>
+              <ion-col size="6">
+                <input class="input-file" id="my-file" type="file" (change)="addImage($event)">
+                <label for="my-file" class="input-file-trigger" tabindex="0">Depuis vos fichier.</label>
+              </ion-col>
+              <ion-col size="6" (click)="displayImageList()">
+                <p class="input-file-trigger">Déjà enregistré</p>
+              </ion-col>
+              <ion-col size="12">
+                <p class="file-return"></p>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+
+        </ion-list>
+
+        <ion-row>
+          <ion-col size="12" class="form-error">{{loginError}}</ion-col>
+          <ion-col size="6">
+            <ion-button color="danger" fill="outline" (click)="cancel()">Annuler</ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button color="primary" fill="outline" disabled="{{!createHistoryForm.valid}}" (click)="createHistory()" *ngIf="!isModification; else ModificationBlock">Créer</ion-button>
+            <ng-template #ModificationBlock>
+              <ion-button color="primary" fill="outline" disabled="{{!createHistoryForm.valid}}" (click)="createHistory()">Modifier</ion-button>
+            </ng-template>
+          </ion-col>
+        </ion-row>
+      </form>
+    </ion-card>
+  </div>
+
+  <div class="image-list" id="image_list">
+    <ion-card class="container">
+      <ion-title>Liste d'image</ion-title>
+      <ion-grid>
+        <ion-row class="list">
+          <ion-col size="2" *ngFor="let img of listImage" id="container_img_{{img.name}}">
+            <ion-img src="{{displayedImages[img.name]}}" class="img" (click)="selectImage(img.name)"></ion-img>
+          </ion-col>
+        </ion-row>
+        <ion-row class="buttons">
+          <ion-col size="6">
+            <ion-button color="danger" fill="outline" expand="full" (click)="cancelSelectImage()">Annuler</ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button color="primary" fill="outline" expand="full" (click)="confirmSelectImage()">Valider</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </div>
+
+  <div class="delete" id="delete_container">
+    <ion-card class="container">
+      <ion-title>Etes-vous sûr de vouloir supprimer votre histoire ?</ion-title>
+      <p>Tous vos personnages, lieux, et ce que vous avez écrit sera supprimé.</p>
+      <ion-row class="buttons">
+        <ion-col size="6">
+          <ion-button color="danger" fill="outline" expand="full" (click)="cancelDelete()">Annuler</ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button color="primary" fill="outline" expand="full" (click)="clickConfirmDelete()">Valider</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+</ion-content>

@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Lieux
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="synchronize()">
+        <ion-icon name="cloud-done" class="done" *ngIf="isSynchronize; else NotSynchronize"></ion-icon>
+        <ng-template #NotSynchronize>
+          <ion-icon name="cloud-upload" class="upload"></ion-icon>
+        </ng-template>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button [routerLink]="['/place-sheet/'+id+'/new']"><ion-icon name="pin"></ion-icon></ion-fab-button>
+      <ion-fab-button [routerLink]="['/place-link/'+id+'/new']"><ion-icon name="resize"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="paper"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="document"></ion-icon></ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="draggable-zone">
+        <app-place-sheet *ngFor="let place of places" [place]="place" (callBack)="deplaceCard($event)" (deletePlace)="deletePlace($event)" id="place_{{place.id}}" class="place"></app-place-sheet>
+        <div class="line-link" *ngFor="let line of loadLine; let i = index" [ngStyle]="getStyleLink(i)"></div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

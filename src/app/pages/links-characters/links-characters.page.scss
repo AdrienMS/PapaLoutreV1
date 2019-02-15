@@ -1,0 +1,378 @@
+.upload {
+    color: #de9c00;
+}
+
+.done {
+    color: green;
+}
+
+.toolboxMobile {
+    background-color: dimgrey;
+    transition: -webkit-transform 0.5s;
+    transition: transform 0.5s;
+    transition: transform 0.5s, -webkit-transform 0.5s;
+    height: 100%;
+    position: absolute;
+    z-index: 5;
+    width: 40vw;
+    display: none;
+}
+
+.toolbox-mobile-black-screen {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    z-index: 4;
+    background-color: #00000059;
+}
+
+.links-character {
+
+    .content {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        .toolbox {
+            background-color: dimgrey;
+            transition: transform 0.5s;
+            .characters {
+                
+            }
+        
+            .tools {
+        
+            }
+        
+            .title {
+                color: white;
+            }
+        
+            .container {
+
+                .card {
+                    background-color: white;
+                    height: calc(calc(6 / var(--ion-grid-columns, 12)) * 19vw);
+                    .img {
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background-color: black;
+                        height: calc(calc(6 / var(--ion-grid-columns, 12)) * 19vw);
+                    }
+                    .name {
+                        height: 100%;
+                        text-align: center;
+                        background-color: #00000061;
+                        color: white;
+                        p {
+                            margin-top: 50%;
+                            transform: translateY(-50%);
+                        }
+                    }
+                }
+
+                .tool {
+                    color: white;
+                }
+        
+            }
+        }
+
+        
+        .slide-panel {
+            position: fixed;
+            top: 0px;
+            left: 0;
+            margin-left: 40vw;
+            background-color: dimgrey;
+            z-index: 10;
+            cursor: pointer;
+            color: white;
+            height: 35px;
+            width: 35px;
+            border-bottom-right-radius: 50%;
+            border-top-right-radius: 50%;
+            text-align: center;
+            &.close {
+                margin-left: 0;
+            }
+            ion-icon {
+                font-size: 35px;
+            }
+        }
+
+        .draggable-zone {
+            overflow: scroll;
+            .character {
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 2;
+                .options-character {
+                    background-color: transparent;
+                    position: absolute;
+                    top: 2px;
+                    z-index: 1;
+                    ion-icon {
+                        color: white;
+                        font-size: 18px;
+                    }
+                }
+                .name {
+                    height: 100%;
+                    text-align: center;
+                    background-color: #00000061;
+                    color: white;
+                    p {
+                        margin-top: 50%;
+                        transform: translateY(-50%);
+                    }
+                }
+                .img {
+                    position: absolute;
+                    top: 50%;
+                    z-index: -1;
+                    transform: translateY(-50%);
+                    background-color: black;
+                    height: 150px;
+                }
+            }
+
+        }
+
+    }
+
+}
+
+.new-link {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #00000070;
+    }
+    .content {
+        position: fixed;
+        top: 0;
+        left: 10%;
+        width: 80%;
+        height: 95%;
+        background-color: white;
+        .definition {
+
+        }
+        .search-bar-values {
+            position: absolute;
+            overflow-y: scroll;
+            max-height: 250%;
+            z-index: 1;
+            width: 100%;
+            top: 100%;
+            display: none;
+            &.show {
+                display: block;
+            }
+            ion-item {
+                &:hover {
+                    cursor: pointer;
+                    background: #f1f1f1;
+                }
+            }
+        }
+    }
+}
+
+.line-link {
+    position:absolute;
+    z-index: 1;
+    height: 3px;
+    transform-origin : 0 0;
+    cursor: pointer;
+    &:hover {
+        height: 5px;
+    }
+}
+
+.tree-view {
+    width: 100%;
+    .parent {
+
+    }
+    .children {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s;
+        &.show {
+            height: auto;
+            transition: height 0.3s;
+        }
+    }
+}
+
+//character
+.section {
+    .name {
+        width: 100%;
+    }
+    .content {
+        width: 100%;
+        .item {
+
+        }
+    }
+}
+
+.add-field {
+    display: none;
+    &.show {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #00000070;
+        display: block;
+        .container {
+            background-color: white;
+            width: 80%;
+            margin-left: 10%;
+        }
+    }
+}
+
+.autocomplete {
+    .search-bar-values {
+        position: absolute;
+        overflow-y: scroll;
+        max-height: 250%;
+        z-index: 1;
+        width: 100%;
+        top: 100%;
+        display: none;
+        &.show {
+            display: block;
+        }
+        ion-item {
+            &:hover {
+                cursor: pointer;
+                background: #f1f1f1;
+            }
+		}
+    }
+}
+
+.character-sheet {
+    position: fixed;
+    overflow-y: scroll;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: none;
+    &.show {
+        display: block;
+    }
+}
+
+.add-section-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #00000070;
+    width: 100%;
+    height: 100%;
+    display: none;
+    &.show {
+        display: block;
+    }
+    .container {
+        width: 80%;
+        margin-left: 10%;
+        background-color: white;
+        ion-card-title {
+            text-align: center;
+        }
+    }
+}
+
+.modify-button {
+    height: 40px;
+    .icon {
+        font-size: 12.8px;
+    }
+}
+
+.values-search-list {
+    max-height: 25vh;
+    overflow-y: scroll;
+}
+
+.characters {
+    .list {
+        .card {
+            height: calc(20vw - 30px);
+            .img {
+                max-height: calc(16vw - 30px);
+                min-height: calc(16vw - 30px);
+                background-color: black;
+                position: absolute;
+                height: calc(16vw - 30px);
+            }
+            .card-content-md {
+                padding: 13px 16px;
+                font-size: 14px;
+                line-height: 1.5;
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                background-color: white;
+            }
+        }
+    }
+}
+
+.modify-value-link {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #00000070;
+    }
+    .content {
+        position: fixed;
+        width: 50%;
+        left: 25%;
+        background-color: white;
+        .links-container {
+            max-height: 60vh;
+            overflow-y: scroll;
+        }
+    }
+}
+
+.add-field-link {
+    display: none;
+    &.show {
+        display: block;
+        background-color: #00000070;
+    }
+
+    .content {
+        background-color: white;
+    }
+}

@@ -1,0 +1,70 @@
+<ion-content>
+    <div class="container">
+        <ion-card class="first-card"></ion-card>
+        <ion-card class="login" id="login">
+            <ion-card-header class="header">
+                <ion-card-title class="title">Se connecter</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="content">
+                <div class="input-container">
+                    <input type="email" id="loginEmail" required="required" [(ngModel)]="loginEmail" />
+                    <label for="loginEmail">Email</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="loginPassword" required="required" [(ngModel)]="loginPassword" />
+                    <label for="loginPassword">Mot de passe</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="button-container">
+                    <button (click)="onClickLogin()" id="loginButton">
+                        <span *ngIf="!loading; else loadingBlockLogin">Valider</span>
+                        <ng-template #loadingBlockLogin>
+                            <ion-spinner style="color:white;"></ion-spinner>
+                        </ng-template>
+                    </button>
+                </div>
+                <div class="footer">
+                    <a routerLink="/">Oubli de mot de passe</a>
+                </div>
+            </ion-card-content>
+        </ion-card>
+        <div class="form-toggle" id="form_toggle" (click)="hide_register()"></div>
+        <ion-card class="register" id="register" (click)="display_register()">
+            <ion-card-header class="header">
+                <ion-card-title class="title">S'inscrire</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="content">
+                <div class="input-container">
+                    <input type="text" id="registerUsername" required="required" [(ngModel)]="registerName" />
+                    <label for="registerUsername">Pseudo</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="input-container">
+                    <input type="text" id="registerEmail" required="required" [(ngModel)]="registerName" />
+                    <label for="registerEmail">Adresse mail</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="registerPassword" required="required" [(ngModel)]="registerPassword" />
+                    <label for="registerPassword">Mot de passe</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="confirm_password" required="required" [(ngModel)]="registerPasswordConfirm" />
+                    <label for="confirm_password">Confirmer le mot de passe</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="button-container">
+                    <button (click)="onClickRegister()" id="registerButton">
+                        <span *ngIf="!loading; else loadingBlockRegister">Valider</span>
+                        <ng-template #loadingBlockRegister>
+                            <ion-spinner style="color:white;"></ion-spinner>
+                        </ng-template>
+                    </button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </div>
+    <div class="changing-page" id="changing_page"></div>
+</ion-content>

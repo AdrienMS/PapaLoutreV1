@@ -1,0 +1,10 @@
+<div class="header-block">
+    <div class="top-block">
+        <a class="connection-link" routerLink="/Logister" routerLinkActive="active" *ngIf="!connected; else connectedBlock">Se connecter / S'inscrire</a>
+        <ng-template #connectedBlock>
+            <a class="profil-link" routerLink="" routerLinkActive="active">{{currentUser.name}}</a>
+            <a class="logout" (click)="logout()">Logout</a>
+        </ng-template>
+    </div>
+    <ion-img src="../../assets/imgs/logo-new.png" class="logo"></ion-img>
+</div>
