@@ -7,6 +7,12 @@
       Chapitres
     </ion-title>
     <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="changeView()" *ngIf="screenSize >= 800">
+        <ion-icon name="phone-portrait" class="view" *ngIf="isMobile; else ComputerViewBlock"></ion-icon>
+        <ng-template #ComputerViewBlock>
+          <ion-icon name="desktop" class="view"></ion-icon>
+        </ng-template>
+      </ion-button>
       <ion-button fill="clear" (click)="synchronize()">
         <ion-icon name="cloud-done" class="done" *ngIf="isSynchronize; else NotSynchronize"></ion-icon>
         <ng-template #NotSynchronize>
@@ -17,10 +23,27 @@
   </ion-toolbar>
 </ion-header>
 
+<ng-container *ngIf="isMobile; else ComputerBlock">
+  <ion-content class="page mobile">
+    <ng-container *ngTemplateOutlet="chapter"></ng-container>
+  </ion-content>
+</ng-container>
+<ng-template #ComputerBlock>
+  <ion-content class="page">
+    <ng-container *ngTemplateOutlet="chapter"></ng-container>
+  </ion-content>
+</ng-template>
 
-<ion-content class="page">
-  <ion-card class="chapters">
-    <ion-card-title>Chapitres</ion-card-title>
+<ng-template #chapter>
+  <ion-card class="chapters" id="chapters_panel">
+      <ion-row class="main-title">
+        <ion-col size="12" class="title">
+          <p class="text">Chapitres</p>
+        </ion-col>
+        <ion-col size="12" class="image">
+          <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+        </ion-col>
+      </ion-row>
     <ion-card-content class="content">
       <ion-row *ngFor="let chapter of chapters; let i = index">
         <ion-col size="1" *ngIf="chapter.children != null && chapter.children.length > 0">
@@ -55,10 +78,26 @@
       </ion-row>
     </ion-card-content>
   </ion-card>
-
-  <div class="write-zone" *ngIf="selectedChapter != null">
-    <editor apiKey="4ah0y9piw5lyw31y6xlj40ney8yoj7unsnw65plait3xk1vy" [init]="tinyMceSettings" [(ngModel)]="selectedChapter.write" (onChange)="editData()"></editor>
+  <div class="panel left" id="panel_left" *ngIf="isMobile">
+    <ion-icon name="arrow-dropleft" (click)="closeChapterPanel()" *ngIf="isOpenChapter; else closeChapterPanelBox"></ion-icon>
+    <ng-template #closeChapterPanelBox>
+      <ion-icon name="arrow-dropright" (click)="openChapterPanel()"></ion-icon>
+    </ng-template>
   </div>
 
-  <app-informations-chapter *ngIf="selectedChapter != null" [chapter]="selectedChapter" [parent]="root"></app-informations-chapter>
-</ion-content>
+  <div class="write-zone" *ngIf="selectedChapter != null">
+    <editor *ngIf="!isMobile || screenSize > 800; else MobileEditor" apiKey="4ah0y9piw5lyw31y6xlj40ney8yoj7unsnw65plait3xk1vy" [init]="tinyMceSettings" [(ngModel)]="selectedChapter.write" (onChange)="editData()"></editor>
+  
+    <ng-template #MobileEditor>
+      <ion-textarea [(ngModel)]="selectedChapter.write" (ionChange)="editData()"></ion-textarea>
+    </ng-template>
+  </div>
+
+  <app-informations-chapter *ngIf="selectedChapter != null" [chapter]="selectedChapter" [parent]="root" [isMobile]="isMobile" [isOpen]="isOpenInformations"></app-informations-chapter>
+  <div class="panel right" id="panel_right" *ngIf="isMobile">
+    <ion-icon name="arrow-dropright" (click)="closeInformationsPanel()" *ngIf="isOpenInformations; else closeInformationsPanelBox"></ion-icon>
+    <ng-template #closeInformationsPanelBox>
+      <ion-icon name="arrow-dropleft" (click)="openInformationsPanel()"></ion-icon>
+    </ng-template>
+  </div>
+</ng-template>

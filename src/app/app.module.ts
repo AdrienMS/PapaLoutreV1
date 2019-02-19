@@ -7,6 +7,9 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { Network } from '@ionic-native/network/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 import { Firebase } from '@ionic-native/firebase/ngx';
 
@@ -49,6 +52,9 @@ import { InformationPopoverComponent } from './components/chapter/information-po
     SplashScreen,
     ImagePicker,
     FileChooser,
+    Network,
+    Camera,
+    File,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Firebase,
     AngularFireAuth,

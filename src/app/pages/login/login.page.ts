@@ -48,8 +48,8 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
-  login() {
-    this.presentLoading();
+  async login() {
+    await this.presentLoading();
 		let data = this.loginForm.value;
 
 		if (!data.email) {
@@ -64,20 +64,15 @@ export class LoginPage implements OnInit {
 			.then(
 				() => {
           this.auth.getCurrentUserInformations().subscribe(res => {
-            if (res.status === 0) {
-            } else {
-              this.navCtrl.navigateForward("/profil");
-            }
-            console.log('login');
             this.events.publish('login');
             this.destroyLoading();
+            this.navCtrl.navigateForward("/profil");
           });
         },
 				error => {
-          this.loginError = error.message;
-          console.log('login error');
-          this.events.publish('login');
+          console.log(error);
           this.destroyLoading();
+          this.loginError = error.message;
         }
 			);
   }
@@ -87,15 +82,13 @@ export class LoginPage implements OnInit {
     this.auth.signInWithGoogle()
       .then(
         () => {
-          this.navCtrl.navigateForward("/profil");
-          console.log('loginWithGoogle');
           this.events.publish('login');
           this.destroyLoading();
+          this.navCtrl.navigateForward("/profil");
         },
         error => {
           console.log(error.message);
-          console.log('loginWithGoogle error');
-          this.events.publish('login');
+          this.loginError = error.message;
           this.destroyLoading();
         }
       );

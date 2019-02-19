@@ -32,10 +32,15 @@
 
   <ion-grid>
     <ion-row>
-      <ion-col size="12" class="draggable-zone">
+      <ion-col size="12" class="draggable-zone" *ngIf="places != null && places != []; else NoPlaceBlock">
         <app-place-sheet *ngFor="let place of places" [place]="place" (callBack)="deplaceCard($event)" (deletePlace)="deletePlace($event)" id="place_{{place.id}}" class="place"></app-place-sheet>
         <div class="line-link" *ngFor="let line of loadLine; let i = index" [ngStyle]="getStyleLink(i)"></div>
       </ion-col>
+      <ng-template #NoPlaceBlock>
+        <ion-col size="12">
+          Vous n'avez pas de lieux ou vous n'êtes pas connecté à internet
+        </ion-col>
+      </ng-template>
     </ion-row>
   </ion-grid>
 

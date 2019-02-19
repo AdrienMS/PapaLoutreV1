@@ -3,6 +3,7 @@ import { Component, HostListener } from '@angular/core';
 import { Platform, Events } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Network } from '@ionic-native/network/ngx';
 
 import { FcmService } from './services/fcm.service';
 import { AuthService } from './services/auth.service';
@@ -93,15 +94,15 @@ export class AppComponent {
     public fcm: FcmService,
     private auth: AuthService,
     public toastCtrl: ToastController,
-    public events: Events
+    public events: Events,
+    private network: Network
   ) {
+    //this.checkConnection();
     events.subscribe('login', () => {
-      console.log("login");
       this.checkUserAuth();
     });
     events.subscribe('selectedStory', value => {
       this.selectedStory = value;
-      console.log("selectedStory");
       this.checkUserAuth();
     });
     this.auth.getInfo();
@@ -110,6 +111,9 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.checkConnection();
+      document.addEventListener("offline", this.offlineCallBackFunction, false);
+      document.addEventListener("online", this.onlineCallBackFunction, false);
       this.screenSize = window.innerWidth;
       this.statusBar.styleDefault();
       this.splashScreen.hide();
@@ -120,8 +124,26 @@ export class AppComponent {
       this.fcm.listenToNotifications().pipe(
         tap(msg => this.initToast(msg)))
       .subscribe();
-      console.log("initializeApp");
       this.checkUserAuth();
+    });
+  }
+
+  checkConnection() {
+    let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
+      console.log('network was disconnected :-(');
+    });
+    
+    // watch network for a connection
+    let connectSubscription = this.network.onConnect().subscribe(() => {
+      console.log('network connected!');
+      // We just got a connection but we need to wait briefly
+       // before we determine the connection type. Might need to wait.
+      // prior to doing any api requests as well.
+      setTimeout(() => {
+        if (this.network.type === 'wifi') {
+          console.log('we got a wifi connection, woohoo!');
+        }
+      }, 3000);
     });
   }
 
@@ -141,9 +163,7 @@ export class AppComponent {
         //console.log(user);
         if (user) {
           this.appPages = this.connectedPages;
-          console.log("checkUserAuth");
           this.auth.getCurrentUserInformations().subscribe(res => {
-            console.log(res);
             this.currentUser = res;
             this.events.publish('currentUser', this.currentUser);
             if (this.selectedStory != null) {
@@ -169,6 +189,14 @@ export class AppComponent {
         this.currentUser = null;
       }
     );
+  }
+
+  offlineCallBackFunction() {
+    console.log('offline');
+  }
+
+  onlineCallBackFunction() {
+    console.log('online');
   }
 
   @HostListener('window:resize', ['$event'])

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AlertController, ToastController, LoadingController, NavController } from '@ionic/angular';
 
@@ -16,6 +16,8 @@ export class ProfilPage implements OnInit {
 
   createHistoryForm: FormGroup;
   createHistoryError: string;
+
+  private colSize: number = 2;
 
   validation_messages = {
     'title': [
@@ -52,6 +54,10 @@ export class ProfilPage implements OnInit {
     }
 
   ngOnInit() {
+    this.initialise();
+  }
+
+  private initialise() {
     this.storiesService.getStories().subscribe(
       res => {
         console.log(res);
@@ -62,6 +68,7 @@ export class ProfilPage implements OnInit {
         } else {
           this.files = null;
         }
+        this.defineHeightStories();
       }
     );
     this.fileInput = document.querySelector( ".input-file" ),  
@@ -96,14 +103,17 @@ export class ProfilPage implements OnInit {
       image: data.image,
       imgName: this.selectedImg
     };
+    console.log(credentials);
     
     this.storiesService.createStories(credentials, this.historyModificationId).then(
       res => {
         if (res) {
           if (this.isModification) {
             this.toastMessage("Votre histoire à été modifié");
+            this.initialise();
           } else {
             this.toastMessage("Votre histoire à été créé");
+            this.initialise();
           }
           this.cancel();
         } else {
@@ -178,10 +188,12 @@ export class ProfilPage implements OnInit {
   displayImageList() {
     this.listImage = this.storiesService.getImagesList();
     this.displayedImages = {};
+    console.log(this.listImage);
     for(let i = 0; i < this.listImage.length; i += 1) {
       if (this.listImage[i].name != null) {
         this.storiesService.getUrlImage(this.listImage[i].name).subscribe(
           res => {
+            console.log(res);
             this.displayedImages[this.listImage[i].name] = res;
           },
           err => {
@@ -244,6 +256,7 @@ export class ProfilPage implements OnInit {
       this.toastMessage("Votre histoire à été supprimé");
       this.cancelDelete();
       this.destroyLoading();
+      this.initialise();
     });
   }
 
@@ -260,6 +273,31 @@ export class ProfilPage implements OnInit {
   goToStory(key) {
     console.log(key);
     this.navCtrl.navigateForward("/history-dashboard/" + key);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  private defineHeightStories() {
+    if (window.innerWidth <= 375) {
+      this.colSize = 6;
+    } else if (window.innerWidth <= 800) {
+      this.colSize = 4;
+    } else if (window.innerWidth <= 1200) {
+      this.colSize = 3;
+    } else {
+      this.colSize = 2;
+    }
+    return {
+      height: "calc(calc(" + this.colSize + " / var(--ion-grid-columns, 12)) * 100vw)"
+    }
+  }
+
+  onScroll(event) {
+    let block = document.getElementById("header");
+    if (event.detail.currentY > 0) {
+      block.classList.add("show");
+    } else {
+      block.classList.remove("show");
+    }
   }
 
 }

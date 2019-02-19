@@ -28,7 +28,7 @@ export class AuthService {
   ) {
     afAuth.authState.subscribe(user => {
 			this.user = user;
-    });
+    }, error => console.log(error));
     this.ref = firebase.database().ref('users/');
     this.getInfo();
   }
@@ -49,6 +49,10 @@ export class AuthService {
         //console.log(this.info);
         //this.events.publish('login');
         observer.next(this.info);
+        observer.complete();
+      }, err => {
+        console.log(err);
+        observer.next(null);
         observer.complete();
       });
     });

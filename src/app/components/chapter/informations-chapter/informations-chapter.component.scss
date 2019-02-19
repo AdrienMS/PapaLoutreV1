@@ -1,3 +1,22 @@
+.main-title {
+    .title {
+        padding: 0;
+        text-align: center;
+        background-color: #00b0f0;
+        .text {
+            color: white;
+            margin: 0;
+            font-size: xx-large;
+        }
+    }
+    .image {
+        padding: 0;
+        .cloud {
+
+        }
+    }
+}
+
 .informations {
     position: fixed;
     top: 0;
@@ -62,6 +81,16 @@
         }
         .range {
             padding-top: 0;
+        }
+    }
+
+    &.mobile {
+        width: 0;
+        transition: width 0.5s;
+        &.open {
+            width: 264px;
+            z-index: 3;
+            transition: width 0.5s;
         }
     }
 }

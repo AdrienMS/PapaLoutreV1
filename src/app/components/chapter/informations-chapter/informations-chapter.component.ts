@@ -23,6 +23,8 @@ import { ChapterPage } from '../../../pages/chapter/chapter.page';
 export class InformationsChapterComponent implements OnInit, OnChanges {
   @Input("chapter") chapter: Chapter;
   @Input("parent") parent: ChapterPage;
+  @Input("isMobile") isMobile: boolean;
+  @Input("isOpen") isOpen: boolean;
   private story_id: string;
 
   //informations variables

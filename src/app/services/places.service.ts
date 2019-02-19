@@ -45,17 +45,22 @@ export class PlacesService {
     return Observable.create(observer => {
       this.auth.getCurrentUserInformations().subscribe(res => {
         this.currentUser = res;
-        this.refPlace.on('value', resp => {
-          let returnArr = null;
-          resp.forEach(childSnapshot => {
-            let item = childSnapshot.val();
-            if (childSnapshot.key == this.currentUser.user_id) {
-              returnArr = childSnapshot.val();
-            }
-          });
-          observer.next(returnArr);
+        if (res == null) {
+          observer.next(null);
           observer.complete();
-        });
+        } else {
+          this.refPlace.on('value', resp => {
+            let returnArr = null;
+            resp.forEach(childSnapshot => {
+              let item = childSnapshot.val();
+              if (childSnapshot.key == this.currentUser.user_id) {
+                returnArr = childSnapshot.val();
+              }
+            });
+            observer.next(returnArr);
+            observer.complete();
+          });
+        }
       });
     });
   }
@@ -64,11 +69,16 @@ export class PlacesService {
     return Observable.create(observer => {
       this.getAllPlaces().subscribe(res => {
         this.info = [];
-        Object.keys(res).forEach(key => {
-          this.info.push(new Place(res[key]["id"], res[key]["story_id"], res[key]["position"], res[key]["sections"]));
-        });
-        observer.next(this.info);
-        observer.complete();
+        if (res == null) {
+          observer.next(null);
+          observer.complete();
+        } else {
+          Object.keys(res).forEach(key => {
+            this.info.push(new Place(res[key]["id"], res[key]["story_id"], res[key]["position"], res[key]["sections"]));
+          });
+          observer.next(this.info);
+          observer.complete();
+        }
       });
     })
   }

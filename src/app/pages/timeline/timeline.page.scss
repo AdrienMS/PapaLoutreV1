@@ -1,3 +1,27 @@
+ion-toolbar {
+    --background: #00b0f0;
+    color: white;
+}
+
+.main-title {
+    .title {
+        padding: 0;
+        text-align: center;
+        background-color: #00b0f0;
+        .text {
+            color: white;
+            margin: 0;
+            font-size: xx-large;
+        }
+    }
+    .image {
+        padding: 0;
+        .cloud {
+
+        }
+    }
+}
+
 .timeline {
     position: absolute;
     top: 0;
@@ -17,6 +41,10 @@
         z-index: 3;
         background-color: white;
         
+    }
+
+    .option-header {
+        padding: 0;
     }
 }
 

@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
 
   <ion-grid class="place-sheet">
     <ng-container *ngFor="let section of place.sections; let i_section = index">
@@ -229,7 +229,14 @@
   <!--Add Section-->
   <div class="add-section-box" id="add_section_box">
     <ion-card class="container">
-      <ion-card-title>Ajouter une section</ion-card-title>
+      <ion-row class="main-title">
+        <ion-col size="12" class="title">
+          <p class="text">Ajouter une section</p>
+        </ion-col>
+        <ion-col size="12" class="image">
+          <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+        </ion-col>
+      </ion-row>
       <ion-card-content>
         <ion-row>
           <ion-col>
@@ -255,7 +262,14 @@
   <!--Add Information to a section-->
   <div class="add-field" id="add_field">
     <ion-card class="container">
-      <ion-card-title>Ajouter un champs</ion-card-title>
+      <ion-row class="main-title">
+        <ion-col size="12" class="title">
+          <p class="text">Ajouter un champs</p>
+        </ion-col>
+        <ion-col size="12" class="image">
+          <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+        </ion-col>
+      </ion-row>
       <ion-grid class="fields">
         <ion-row class="name">
           <ion-col>

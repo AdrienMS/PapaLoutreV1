@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Events, PopoverController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 
@@ -28,6 +28,10 @@ export class ChapterPage implements OnInit {
   private story_id: string;
   private root: ChapterPage = this;
   private isSynchronize: boolean = true;
+  private isMobile: boolean = false;
+  private screenSize: number;
+  private isOpenChapter: boolean = false;
+  private isOpenInformations: boolean = false;
   
   //tree view variables
   private group: {id: string, isShow: boolean}[] = [];
@@ -69,7 +73,16 @@ export class ChapterPage implements OnInit {
     window.setInterval(this.doSynchronize, 600000, this);
   }
 
+  private changeView() {
+    if (this.isMobile) {
+      this.isMobile = false;
+    } else {
+      this.isMobile = true;
+    }
+  }
+
   private initialise() {
+    this.onResize(null);
     this.story_id = this.route.snapshot.paramMap.get('story_id');
     this.storiesService.getStoryInfoFromKey(this.story_id).subscribe(
       res => {
@@ -221,6 +234,45 @@ export class ChapterPage implements OnInit {
     return {chap: r_chap, lenght: lenght};
   }
 
+  private openChapterPanel() {
+    let block = document.getElementById("chapters_panel");
+    block.classList.add("open");
+    this.isOpenChapter = true;
+    let buttonBlock = document.getElementById("panel_left");
+    buttonBlock.style.left = "269px";
+
+    this.isOpenInformations = false;
+    buttonBlock = document.getElementById("panel_right");
+    buttonBlock.style.right = "1vw";
+  }
+    
+
+  private closeChapterPanel() {
+    let block = document.getElementById("chapters_panel");
+    block.classList.remove("open");
+    this.isOpenChapter = false;
+    let buttonBlock = document.getElementById("panel_left");
+    buttonBlock.style.left = "1vw";
+  }
+
+  private openInformationsPanel () {
+    let block = document.getElementById("chapters_panel");
+    block.classList.remove("open");
+    this.isOpenChapter = false;
+    let buttonBlock = document.getElementById("panel_left");
+    buttonBlock.style.left = "1vw";
+
+    buttonBlock = document.getElementById("panel_right");
+    buttonBlock.style.right = "269px";
+    this.isOpenInformations = true;
+  }
+
+  private closeInformationsPanel() {
+    this.isOpenInformations = false;
+    let buttonBlock = document.getElementById("panel_right");
+    buttonBlock.style.right = "1vw";
+  }
+
   async presentPopover(ev: any, index: number[]) {
     const popover = await this.popoverController.create({
       component: ChapterActionPopoverComponent,
@@ -229,5 +281,16 @@ export class ChapterPage implements OnInit {
       translucent: true
     });
     return await popover.present();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenSize = window.innerWidth;
+    if (this.screenSize <= 800) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
+    //this.changeView();
   }
 }

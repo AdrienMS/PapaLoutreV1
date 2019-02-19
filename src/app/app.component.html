@@ -1,7 +1,7 @@
 <ion-app>
     <ion-menu>
-      <ion-header>
-        <ion-toolbar>
+      <ion-header no-border>
+        <ion-toolbar class="toolbar">
           <ion-title *ngIf="currentUser === null; else connectedBlock">Menu</ion-title>
           <ng-template #connectedBlock>
             <ion-menu-toggle auto-hide="true">
@@ -11,6 +11,7 @@
             </ion-menu-toggle>
           </ng-template>
         </ion-toolbar>
+        <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
       </ion-header>
       <ion-content>
         <ion-list>

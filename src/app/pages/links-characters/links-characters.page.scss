@@ -1,3 +1,8 @@
+ion-toolbar {
+    --background: #00b0f0;
+    color: white;
+}
+
 .upload {
     color: #de9c00;
 }
@@ -14,7 +19,7 @@
     height: 100%;
     position: absolute;
     z-index: 5;
-    width: 40vw;
+    width: 264px;
     display: none;
 }
 
@@ -89,7 +94,7 @@
             position: fixed;
             top: 0px;
             left: 0;
-            margin-left: 40vw;
+            margin-left: 25vw;
             background-color: dimgrey;
             z-index: 10;
             cursor: pointer;
@@ -374,5 +379,38 @@
 
     .content {
         background-color: white;
+    }
+}
+
+.border {
+    border: 1px solid #00000021;
+}
+
+.main-title {
+    .title {
+        padding: 0;
+        text-align: center;
+        background-color: #00b0f0;
+        .text {
+            color: white;
+            margin: 0;
+            font-size: xx-large;
+        }
+    }
+    .image {
+        padding: 0;
+        .cloud {
+
+        }
+    }
+}
+
+@media only screen and (max-width : 800px) {
+    .links-character {
+        .content {
+            .slide-panel {
+                margin-left: 264px;
+            }
+        }
     }
 }

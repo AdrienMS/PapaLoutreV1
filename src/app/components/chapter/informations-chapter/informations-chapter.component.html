@@ -1,5 +1,28 @@
-<ion-card class="informations">
-  <ion-card-title>Informations</ion-card-title>
+<ng-container *ngIf="isMobile; else ComputerInformationsBlock">
+  <ion-card class="informations mobile" *ngIf="!isOpen; else OpenBlock">
+    <ng-container *ngTemplateOutlet="informations"></ng-container>
+  </ion-card>
+  <ng-template #OpenBlock>
+    <ion-card class="informations mobile open">
+      <ng-container *ngTemplateOutlet="informations"></ng-container>
+    </ion-card>
+  </ng-template>
+</ng-container>
+<ng-template #ComputerInformationsBlock>
+  <ion-card class="informations">
+    <ng-container *ngTemplateOutlet="informations"></ng-container>
+  </ion-card>
+</ng-template>
+
+<ng-template #informations>
+  <ion-row class="main-title">
+    <ion-col size="12" class="title">
+      <p class="text">Informations</p>
+    </ion-col>
+    <ion-col size="12" class="image">
+      <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+    </ion-col>
+  </ion-row>
   <ion-card-content class="content">
     <ion-list *ngIf="chapter.informations != null && chapter.informations != []; else NoInformationsBlock" class="container">
       <ion-item class="information" *ngFor="let info of chapter.informations; let i = index">
@@ -184,4 +207,4 @@
       <ion-range class="range" min="0" max="100" step="1" pin="true" color="secondary" [(ngModel)]="chapter.progression" (ionChange)="editData()"></ion-range>
     </div>
   </ion-card-content>
-</ion-card>
+</ng-template>

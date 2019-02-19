@@ -87,7 +87,7 @@ export class StoriesService {
     return new Promise<boolean>((resolve, reject) => {
       this.auth.getCurrentUserInformations().subscribe(res => {
         this.currentUser = res;
-        if (credentials.image != null && credentials.image != "") {
+        if (credentials.image != null && credentials.image != "" && typeof(credentials.image) != "string") {
           this.uploadImageBrowser(credentials.image, credentials, isModify).then(
             res => {
               if (res) { resolve(true); }
@@ -111,7 +111,7 @@ export class StoriesService {
     } else {
       id = isModify;
     }
-    if (data != null) {
+    if (data != null && typeof(data) != "string") {
       if (data.state === "success") {
         putDatas = {title: credentials.title, description: credentials.description, img: data.metadata.name, user_id: this.currentUser.user_id, is_private: true, id: id};
       } else {
@@ -121,6 +121,8 @@ export class StoriesService {
       let value = null;
       if (credentials.imgName != undefined && credentials.imgName != null) {
         value = credentials.imgName;
+      } else if (typeof(credentials.image) == "string" && credentials.image != "") {
+        value = credentials.image;
       }
       putDatas = {title: credentials.title, description: credentials.description, img: value, user_id: this.currentUser.user_id, is_private: true, id: id};
     }
