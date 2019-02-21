@@ -89,4 +89,33 @@ export class FirebaseDatasCharacters {
     character: characterSheet[];
     top: number;
     left: number;
+
+    constructor(id: string, story_id: string, character: any[], top: number, left: number) {
+        this.id = id;
+        this.story_id = story_id;
+        this.character = [];
+        character.forEach(char => {
+            let items: FieldCharacter[] = [];
+            char.items.forEach(item => {
+                items.push(new FieldCharacter(item.label, item.type, item.size, item.value, item.searchValues, item.canModify, item.loadImage));
+            });
+            this.character.push(new characterSheet(char.name, items));
+        });
+        this.top = top;
+        this.left = left;
+    }
+
+    getDatasToJson() {
+        let returnDatas = {
+            id: this.id,
+            story_id: this.story_id,
+            character: [],
+            top: this.top,
+            left: this.left
+        }
+        this.character.forEach(char => {
+            returnDatas.character.push(char.getDatasToJson());
+        });
+        return returnDatas;
+    }
 }

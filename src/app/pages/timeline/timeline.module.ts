@@ -9,6 +9,7 @@ import { TimelinePage } from './timeline.page';
 
 import { TimelineEventComponent } from '../../components/timeline/timeline-event/timeline-event.component';
 import { TimelinePeriodComponent } from '../../components/timeline/timeline-period/timeline-period.component';
+import { TimelineChapterComponent } from '../../components/timeline/timeline-chapter/timeline-chapter.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [TimelinePage, TimelineEventComponent, TimelinePeriodComponent]
+  declarations: [TimelinePage, TimelineEventComponent, TimelinePeriodComponent, TimelineChapterComponent]
 })
 export class TimelinePageModule {}

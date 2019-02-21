@@ -146,4 +146,17 @@ export class AuthService {
     this.ref.push();
     this.ref.child(this.afAuth.auth.currentUser.uid).update({email: user.email, username: user.username, user_id: user.user_id, status: user.status});
   }
+
+  resetPassword(email: string): Observable<boolean> {
+    return Observable.create(observer => {
+      this.afAuth.auth.sendPasswordResetEmail(email).then(() => {
+        observer.next(true);
+        observer.complete();
+      }, err => {
+        console.log(err);
+        observer.next(false);
+        observer.complete();
+      });
+    });
+  }
 }

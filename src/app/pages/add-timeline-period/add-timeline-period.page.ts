@@ -22,6 +22,8 @@ export class AddTimelinePeriodPage implements OnInit {
     private route: ActivatedRoute,
     private toast: ToastController,
     private navCtrl: NavController) {
+      this.story_id = this.route.snapshot.paramMap.get('story_id');
+      this.period_id = this.route.snapshot.paramMap.get('period_id');
       this.initialise();
     /*events.subscribe('currentUser', value => {
       this.initialise();

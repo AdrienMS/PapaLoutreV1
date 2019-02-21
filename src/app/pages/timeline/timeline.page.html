@@ -25,8 +25,9 @@
     <div class="values">
       <div class="value" *ngFor="let value of timeline_values; let i = index" [ngStyle]="getStyleValue(i)">{{value}}</div>
     </div>
-    <app-timeline-event *ngFor="let item of t_events; let i = index" [event_id]="i" [allEvent]="t_events" [allPeriod]="t_periods" [option]="option"></app-timeline-event>
-    <app-timeline-period *ngFor="let item of t_periods; let i = index" [period_id]="i" [allEvent]="t_events" [allPeriod]="t_periods" [option]="option"></app-timeline-period>
+    <app-timeline-event *ngFor="let item of t_events; let i = index" [event_id]="i" [allEvent]="t_events" [allPeriod]="t_periods" [allChapter]="chapters" [option]="option"></app-timeline-event>
+    <app-timeline-period *ngFor="let item of t_periods; let i = index" [period_id]="i" [allEvent]="t_events" [allPeriod]="t_periods" [allChapter]="chapters" [option]="option"></app-timeline-period>
+    <app-timeline-chapter *ngFor="let item of chapters; let i = index" [period_id]="i" [allEvent]="t_events" [allPeriod]="t_periods" [allChapter]="chapters" [option]="option"></app-timeline-chapter>
   </div>
 
 

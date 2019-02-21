@@ -25,7 +25,8 @@ const routes: Routes = [
   { path: 'add-timeline-period/:story_id/:period_id', loadChildren: './pages/add-timeline-period/add-timeline-period.module#AddTimelinePeriodPageModule' },
   { path: 'plot/:story_id', loadChildren: './pages/plot/plot.module#PlotPageModule' },
   { path: 'chapter/:story_id', loadChildren: './pages/chapter/chapter.module#ChapterPageModule' },
-  { path: 'add-chapter/:story_id/:chapter_id', loadChildren: './pages/add-chapter/add-chapter.module#AddChapterPageModule' }
+  { path: 'add-chapter/:story_id/:chapter_id', loadChildren: './pages/add-chapter/add-chapter.module#AddChapterPageModule' },
+  { path: 'reset-password', loadChildren: './pages/reset-password/reset-password.module#ResetPasswordPageModule' }
 ];
 
 @NgModule({

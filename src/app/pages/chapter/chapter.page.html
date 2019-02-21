@@ -53,7 +53,7 @@
           <p (click)="changeSelectedChapter(chapter)">{{chapter.name}}</p>
         </ion-col>
         <ion-col size="1">
-          <button fill="clear" (click)="presentPopover($event, [i])" class="options-chapter"><ion-icon name="more"></ion-icon></button>
+          <ion-button fill="clear" (click)="presentPopover($event, [i])" class="options-chapter"><ion-icon name="more"></ion-icon></ion-button>
         </ion-col>
         <ion-col size="12" class="col" *ngIf="group[i].isShow">
           <app-branch-chapter [chapter]="chapter" [root]="root" (selectChapter)="changeSelectedChapter($event)"></app-branch-chapter>

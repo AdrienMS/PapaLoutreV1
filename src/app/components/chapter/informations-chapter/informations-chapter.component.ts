@@ -10,8 +10,11 @@ import { Place, PlacePosition, PlaceSection, PlaceInformation } from '../../../m
 
 import { CharactersService } from '../../../services/characters.service';
 import { PlacesService } from '../../../services/places.service';
+import { ChapterService } from '../../../services/chapter.service';
 
 import { InformationPopoverComponent } from '../information-popover/information-popover.component';
+import { FavoritesComponent } from '../favorites/favorites.component';
+import { FavoritesListComponent } from '../favorites-list/favorites-list.component';
 
 import { ChapterPage } from '../../../pages/chapter/chapter.page';
 
@@ -26,6 +29,8 @@ export class InformationsChapterComponent implements OnInit, OnChanges {
   @Input("isMobile") isMobile: boolean;
   @Input("isOpen") isOpen: boolean;
   private story_id: string;
+
+  private favorites: {name: string, id: string, informations: Information[]}[] = [];
 
   //informations variables
   private isEdit: boolean[] = [];
@@ -47,6 +52,7 @@ export class InformationsChapterComponent implements OnInit, OnChanges {
   constructor(
     private charactersService: CharactersService,
     private placesService: PlacesService,
+    private chapterService: ChapterService,
     private route: ActivatedRoute,
     private events: Events,
     private popoverController: PopoverController) {
@@ -71,6 +77,11 @@ export class InformationsChapterComponent implements OnInit, OnChanges {
     this.placesService.getPlacesFromStory(this.story_id).subscribe(res => {
       this.places = res;
     });
+    this.getFavorites();
+    this.initInfos();
+  }
+
+  private initInfos() {
     this.group = [];
     this.isEdit = [];
     if (this.chapter.informations != null) {
@@ -83,6 +94,15 @@ export class InformationsChapterComponent implements OnInit, OnChanges {
         this.isEdit.push(false);
       });
     }
+  }
+
+  private getFavorites() {
+    this.chapterService.getFavorites().subscribe(res => {
+      this.favorites = res;
+    },
+    err => {
+      console.log(err);
+    });
   }
 
   private clickToggle(index: number) {
@@ -178,6 +198,9 @@ export class InformationsChapterComponent implements OnInit, OnChanges {
       canModify: true,
       searchValues: null
     });
+    if (this.chapter.informations == null) {
+      this.chapter.informations = [];
+    }
     this.chapter.informations.push(info);
     this.group.push({index: this.chapter.informations.length - 1, isShow: true});
     this.isEdit.push(true);
@@ -204,10 +227,75 @@ export class InformationsChapterComponent implements OnInit, OnChanges {
     this.parent.editData();
   }
 
+  public saveToFavorites(chapter: Chapter) {
+    let infoToSave: Information[] = [];
+    if (chapter.informations != null && chapter.informations.length > 0) {
+      chapter.informations.forEach(info => {
+        let n_info = new Information({label: info.label, type: info.type, value: null, size: info.size, canModify: info.canModify, searchValues: info.searchValues, id: null});
+        infoToSave.push(n_info);
+      });
+      this.chapterService.saveAsFavorite(infoToSave).subscribe(res => {
+        console.log(res);
+      },
+      err => {
+        console.log(err);
+      });
+    } else {
+      console.log("les infos sont vides");
+    }
+  }
+
+  private deleteFavorite(id: string) {
+    this.chapterService.deleteFavorite(id).subscribe(res => {
+      console.log(res);
+    },
+    err => {
+      console.log(err);
+    });
+  }
+
+  public fillInformationsWithFav(infos: Information[]) {
+    this.chapter.informations = [];
+    infos.forEach(info => {
+      this.chapter.informations.push(new Information(info));
+    });
+    this.initInfos();
+  }
+
+  /*public addToFavorites(chapter: Chapter) {
+    console.log(chapter);
+    this.chapterService.saveAsFavorite(chapter.informations).subscribe(res => {
+      console.log(res);
+    },
+    err => {
+      console.log(err);
+    });
+  }*/
+
+  public async showFavorites(chapter: Chapter) {
+    const popover = await this.popoverController.create({
+      component: FavoritesListComponent,
+      componentProps: {fav: this.favorites, parent: this},
+      event: null,
+      translucent: true
+    });
+    return await popover.present();
+  }
+
   async presentPopover(ev: any, index) {
     const popover = await this.popoverController.create({
       component: InformationPopoverComponent,
       componentProps: {index: index, parent: this},
+      event: ev,
+      translucent: true
+    });
+    return await popover.present();
+  }
+
+  async presentPopoverFav(ev: any, chapter) {
+    const popover = await this.popoverController.create({
+      component: FavoritesComponent,
+      componentProps: {chapter: chapter, parent: this},
       event: ev,
       translucent: true
     });

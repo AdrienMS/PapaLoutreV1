@@ -67,15 +67,14 @@ export class StoriesService {
   }
 
   uploadImageBrowser(imageURI: File, credentials, isModify){
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       this.auth.getCurrentUserInformations().subscribe(res => {
         this.currentUser = res;
         this.afStorage.upload('/stories/' + this.currentUser.user_id + '/' + imageURI.name, imageURI).then(
           res => {
             this.imageRef.push();
             this.imageRef.child(this.currentUser.user_id).child(Object.keys(this.imageList).length.toString()).set({name: imageURI.name});
-            this.callBackCreate(res, credentials, isModify);
-            resolve(true);
+            resolve(this.callBackCreate(res, credentials, isModify));
           },
           err => {console.log(err); reject(err);}
         );
@@ -84,20 +83,19 @@ export class StoriesService {
   }
 
   public createStories(credentials, isModify) {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       this.auth.getCurrentUserInformations().subscribe(res => {
         this.currentUser = res;
         if (credentials.image != null && credentials.image != "" && typeof(credentials.image) != "string") {
           this.uploadImageBrowser(credentials.image, credentials, isModify).then(
             res => {
-              if (res) { resolve(true); }
-              else { resolve(false) };
+              if (res != null) { resolve(res); }
+              else { resolve(null) };
             },
             err => {console.log(err); reject(err);}
           );
         } else {
-          this.callBackCreate(null, credentials, isModify);
-          resolve(true);
+          resolve(this.callBackCreate(null, credentials, isModify));
         }
       });
     });
@@ -132,6 +130,7 @@ export class StoriesService {
     } else {
       this.ref.child(this.currentUser.user_id).child(id).update(putDatas);
     }
+    return id
     
   }
 

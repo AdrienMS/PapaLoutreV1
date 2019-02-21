@@ -2,10 +2,6 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { Events, PopoverController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 
-import { Chapter } from '../../models/chapter';
-import { Information } from '../../models/informations';
-import { characterSheet, FirebaseDatasCharacters, SearchData, FieldCharacter } from '../../models/character';
-
 import { ChapterActionPopoverComponent } from '../../components/chapter/chapter-action-popover/chapter-action-popover.component';
 
 import { LoginPage } from '../login/login.page';
@@ -13,8 +9,14 @@ import { LoginPage } from '../login/login.page';
 import { CharactersService } from './../../services/characters.service';
 import { StoriesService } from '../../services/stories.service';
 import { ChapterService } from '../../services/chapter.service';
+import { TimelineService } from '../../services/timeline.service';
 
+import { TimelineEvent, TimelinePeriod } from './../../models/timeline';
 import { TimelineDate } from '../../models/timeline';
+import { Chapter } from '../../models/chapter';
+import { Information } from '../../models/informations';
+import { characterSheet, FirebaseDatasCharacters, SearchData, FieldCharacter } from '../../models/character';
+import { CDate } from '../../models/cdate';
 
 @Component({
   selector: 'app-chapter',
@@ -32,6 +34,8 @@ export class ChapterPage implements OnInit {
   private screenSize: number;
   private isOpenChapter: boolean = false;
   private isOpenInformations: boolean = false;
+  private t_events: TimelineEvent[] = [];
+  private t_periods: TimelinePeriod[] = [];
   
   //tree view variables
   private group: {id: string, isShow: boolean}[] = [];
@@ -57,6 +61,7 @@ export class ChapterPage implements OnInit {
     private charactersService: CharactersService,
     private storiesService: StoriesService,
     private chapterService: ChapterService,
+    private timelineService: TimelineService,
     private route: ActivatedRoute,
     private popoverController: PopoverController) {
     /*events.subscribe('reorder', value => {
@@ -93,6 +98,12 @@ export class ChapterPage implements OnInit {
         console.log(err);
       }
     );
+    this.timelineService.getEventsFromStory(this.story_id).subscribe(res => {
+      this.t_events = res;
+    });
+    this.timelineService.getPeriodsFromStory(this.story_id).subscribe(res => {
+      this.t_periods = res;
+    });
     this.charactersService.getCharactersFromStory(this.story_id).subscribe(res => {
       this.characters = res;
     });
@@ -113,6 +124,7 @@ export class ChapterPage implements OnInit {
   }
 
   private synchronize() {
+    console.log(this.chapters);
     this.chapterService.save(this.chapters).subscribe(res => {
       this.isSynchronize = true;
     },
@@ -162,15 +174,70 @@ export class ChapterPage implements OnInit {
     this.selectedChapter = chapter;
   }
 
+  private calcMinAndMax(): {min: CDate, max: CDate} {
+    let min_date: CDate = null;
+    let max_date: CDate = null;
+
+    this.t_periods.forEach(period => {
+      let item_min_value = new CDate(period.start.year, period.start.month, period.start.day);
+      let item_max_value = new CDate(period.end.year, period.end.month, period.end.day);
+
+      if (min_date == null) {
+        min_date = item_min_value;
+        max_date = item_max_value;
+      } else {
+        if (min_date.getDays() > item_min_value.getDays()) {
+          min_date = item_min_value;
+        }
+  
+        if (max_date.getDays() < item_max_value.getDays()) {
+          max_date = item_max_value;
+        }
+      }
+    });
+
+    this.t_events.forEach(event => {
+      let item_value = new CDate(event.start.year, event.start.month, event.start.day);
+
+      if (min_date == null) {
+        min_date = item_value;
+        max_date = item_value;
+      } else {
+        if (min_date.getDays() > item_value.getDays()) {
+          min_date = item_value;
+        }
+
+        if (max_date.getDays() < item_value.getDays()) {
+          max_date = item_value;
+        }
+      }
+    });
+
+    return {min: min_date, max: max_date};
+  }
+
   private addChapter() {
+    let start_date = {format: "YYYY", year: 0, month: 0, day: 0};
+    let end_date = {format: "YYYY", year: 0, month: 0, day: 0};
+    if (this.chapters != null && this.chapters.length > 0) {
+      let prev_chap = this.chapters[this.chapters.length - 1];
+      start_date = {format: prev_chap.start.format, year: prev_chap.start.year, month: prev_chap.start.month, day: prev_chap.start.day};
+      end_date = {format: prev_chap.end.format, year: prev_chap.end.year, month: prev_chap.end.month, day: prev_chap.end.day};
+    } else {
+      let min_and_max = this.calcMinAndMax();
+      if (min_and_max.min != null) {
+        start_date = {format: "YYYY", year: min_and_max.min.year, month: min_and_max.min.month, day: min_and_max.min.day};
+        end_date = {format: "YYYY", year: min_and_max.min.year, month: min_and_max.min.month, day: min_and_max.min.day};
+      }
+    }
     let chap = new Chapter(
       null,
       this.story_id,
       "Chapitre " + (this.chapters.length + 1).toString(),
       "",
       "chapter",
-      {format: "YYYY", year: 0, month: 0, day: 0},
-      {format: "YYYY", year: 0, month: 0, day: 0},
+      start_date,
+      end_date,
       null,
       null,
       1,
@@ -179,7 +246,11 @@ export class ChapterPage implements OnInit {
       "",
       null
     );
-    this.chapters.push(chap);
+    if (this.chapters != null && this.chapters.length == 0) {
+      this.selectedChapter = this.chapters[0];
+    } else {
+      this.chapters.push(chap);
+    }
     this.initTreeView();
     this.isSynchronize = false;
   }
@@ -194,8 +265,8 @@ export class ChapterPage implements OnInit {
       "Sous Chapitre " + (datas.lenght + 1).toString(),
       "",
       "chapter",
-      {format: "YYYY", year: 0, month: 0, day: 0},
-      {format: "YYYY", year: 0, month: 0, day: 0},
+      {format: datas.chap.start.format, year: datas.chap.start.year, month: datas.chap.start.month, day: datas.chap.start.day},
+      {format: datas.chap.end.format, year: datas.chap.end.year, month: datas.chap.end.month, day: datas.chap.end.day},
       null,
       null,
       1,
@@ -213,16 +284,39 @@ export class ChapterPage implements OnInit {
   }
 
   public deleteChapter(index: number[]) {
-    let to_delete = index.pop();
-    let datas = this.getChapterAndLenght(index);
-    datas.chap.children.splice(to_delete, 1);
-    this.initTreeView();
-    this.isSynchronize = false;
+    console.log(index);
+    if (index.length == 1) {
+      this.chapterService.delete(this.chapters[index[0]].id).subscribe(res => {
+        if (res) {
+          console.log("ok");
+        } else {
+          console.log("error");
+        }
+        if (this.chapters.length == 0) {
+          this.selectedChapter = null;
+        }
+        this.chapters.splice(index[0], 1);
+        this.initTreeView();
+        this.isSynchronize = false;
+      });
+    } else {
+      let to_delete = index.pop();
+      let datas = this.getChapterAndLenght(index);
+      datas.chap.children.splice(to_delete, 1);
+      if (this.chapters.length == 0) {
+        this.selectedChapter = null;
+      }
+      this.initTreeView();
+      this.isSynchronize = false;
+    }
   }
 
   private getChapterAndLenght(index: number[]): {chap: Chapter, lenght: number} {
     let r_chap = this.chapters[index[0]];
-    let lenght = r_chap.children.length;
+    let lenght = 0;
+    if (r_chap.children != null) {
+      lenght = r_chap.children.length;
+    }
     for (let i = 1; i < index.length; i += 1) {
       r_chap = r_chap.children[index[i]];
       if (r_chap.children != null) {

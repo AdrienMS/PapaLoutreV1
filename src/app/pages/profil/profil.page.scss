@@ -46,6 +46,9 @@ ion-toolbar {
         .cloud {
 
         }
+        &.reversed {
+            transform: rotateZ(180deg);
+        }
     }
 }
 
@@ -88,6 +91,85 @@ ion-card.history {
     position: absolute;
     top: 0;
     width: 100%;
+}
+
+ion-button.rounded {
+    --border-radius: 30px;
+    --border-color: #00b0f0;
+    --ion-color-base: #00b0f0!important;
+    --box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2),0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12);
+}
+
+.change-password {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 5;
+        .black-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+            background-color: #00000070;
+        }
+        .content {
+            position: fixed;
+            top: 10px;
+            z-index: 7;
+            background-color: white;
+            width: 30vw;
+            margin-left: 35vw;
+        }
+    }
+}
+
+.download-story {
+    display: none;
+    &.show {
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        background-color: #00000070;
+        .container {
+            position: fixed;
+            width: 80vw;
+            left: 10vw;
+            margin-left: 0;
+            background-color: white;
+            .stories {
+                
+            }
+        }
+    }
+}
+
+.import-story {
+    background-color: #00b0f0;
+    text-align: center;
+    height: 36px;
+    border-radius: 19px;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2), 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12);
+    cursor: pointer;
+    padding-top: 9px;
+    .input-json-file {
+        display: none;
+    }
+    .input-json-file-trigger {
+        color: white;
+        text-transform: uppercase;
+        font-size: 14px;
+    }
 }
 
 .create-history {
@@ -237,6 +319,14 @@ ion-card.history {
             .container {
                 width: 90vw;
                 left: 5vw;
+            }
+        }
+    }
+    .change-password {
+        &.show {
+            .content {
+                width: 80vw;
+                margin-left: 10vw;
             }
         }
     }

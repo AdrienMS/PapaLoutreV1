@@ -1,3 +1,4 @@
+import { Information } from './../models/informations';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList, snapshotChanges } from 'angularfire2/database';
 import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
@@ -16,6 +17,7 @@ import { Chapter } from '../models/chapter';
 })
 export class ChapterService {
   private ref: firebase.database.Reference;
+  private refFavorite: firebase.database.Reference;
   private chapters: Chapter[];
   private currentUser: User;
 
@@ -26,6 +28,7 @@ export class ChapterService {
       this.auth.getCurrentUserInformations().subscribe(res => {
         this.currentUser = res;
         this.ref = firebase.database().ref('chapters/');
+        this.refFavorite = firebase.database().ref('favorites/chapters/');
         this.getAll();
       });
     }
@@ -94,6 +97,7 @@ export class ChapterService {
         if (res != null) {
           Object.keys(res).forEach(key => {
             if (res[key]["story_id"] == story_id) {
+              console.log(res[key]);
               let chap = new Chapter(
                 res[key]["id"],
                 res[key]["story_id"],
@@ -108,7 +112,7 @@ export class ChapterService {
                 res[key]["level"],
                 res[key]["progression"],
                 res[key]["write"],
-                res[key]["i_parent"]
+                res[key]["i_parents"]
                 );
               this.chapters.push(chap);
             }
@@ -119,5 +123,62 @@ export class ChapterService {
         observer.complete();
       });
     })
+  }
+
+  public getFavorites(): Observable<{name: string, id: string, informations: Information[]}[]> {
+    return Observable.create(observer => {
+      this.auth.getCurrentUserInformations().subscribe(res => {
+        this.currentUser = res;
+        this.refFavorite.on('value', resp => {
+          let returnArr = null;
+          resp.forEach(childSnapshot => {
+            let item = childSnapshot.val();
+            if (childSnapshot.key == this.currentUser.user_id) {
+              returnArr = childSnapshot.val();
+            }
+            console.log(returnArr);
+          });
+          observer.next(returnArr);
+          observer.complete();
+        });
+      });
+  });
+  }
+
+  public saveAsFavorite(informations: Information[]): Observable<boolean> {
+    return Observable.create(observer => {
+      this.auth.getCurrentUserInformations().subscribe(res => {
+        this.currentUser = res;
+        let putDatas = [];
+        let information_id = new Date().getTime().toString();
+        informations.forEach(information => {
+          putDatas.push(information.getDatasToJSON());
+        });
+        let data = {
+          id: information_id,
+          name: "Informations " + information_id,
+          informations: putDatas
+        }
+        if (information_id === null) {
+          this.refFavorite.child(this.currentUser.user_id).child(information_id).set(data);
+        } else {
+          this.refFavorite.child(this.currentUser.user_id).child(information_id).update(data);
+        }
+        observer.next(true);
+        observer.complete();
+      });
+    });
+  }
+
+  public deleteFavorite(information_id: string): Observable<boolean> {
+    return Observable.create(observer => {
+      this.auth.getCurrentUserInformations().subscribe(res => {
+        this.currentUser = res;
+        this.refFavorite.child(this.currentUser.user_id).child(information_id).remove(() => {
+          observer.next(true);
+          observer.complete();
+        });
+      });
+    });
   }
 }

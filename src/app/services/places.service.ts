@@ -74,7 +74,9 @@ export class PlacesService {
           observer.complete();
         } else {
           Object.keys(res).forEach(key => {
-            this.info.push(new Place(res[key]["id"], res[key]["story_id"], res[key]["position"], res[key]["sections"]));
+            if (res[key]["story_id"] == story_id) {
+              this.info.push(new Place(res[key]["id"], res[key]["story_id"], res[key]["position"], res[key]["sections"]));
+            }
           });
           observer.next(this.info);
           observer.complete();

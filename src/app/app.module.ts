@@ -19,6 +19,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabaseModule, AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireStorageModule, AngularFireStorage } from 'angularfire2/storage';
 
+import { FileHelpersModule } from 'ngx-file-helpers';
+
 import { DragulaModule } from 'ng2-dragula';
 
 import { AppComponent } from './app.component';
@@ -33,10 +35,12 @@ import { CharacterPopoverComponent } from './components/character-popover/charac
 import { PlacePopoverComponent } from './components/place/place-popover/place-popover.component';
 import { ChapterActionPopoverComponent } from './components/chapter/chapter-action-popover/chapter-action-popover.component';
 import { InformationPopoverComponent } from './components/chapter/information-popover/information-popover.component';
+import { FavoritesComponent } from './components/chapter/favorites/favorites.component';
+import { FavoritesListComponent } from './components/chapter/favorites-list/favorites-list.component';
 
 @NgModule({
-  declarations: [AppComponent, CharacterPopoverComponent, PlacePopoverComponent, ChapterActionPopoverComponent, InformationPopoverComponent],
-  entryComponents: [CharacterPopoverComponent, PlacePopoverComponent, ChapterActionPopoverComponent, InformationPopoverComponent],
+  declarations: [AppComponent, CharacterPopoverComponent, PlacePopoverComponent, ChapterActionPopoverComponent, InformationPopoverComponent, FavoritesComponent, FavoritesListComponent],
+  entryComponents: [CharacterPopoverComponent, PlacePopoverComponent, ChapterActionPopoverComponent, InformationPopoverComponent, FavoritesComponent, FavoritesListComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -45,6 +49,7 @@ import { InformationPopoverComponent } from './components/chapter/information-po
     AngularFirestoreModule,
     AngularFireDatabaseModule,
     AngularFireStorageModule,
+    FileHelpersModule,
     DragulaModule.forRoot()
   ],
   providers: [
@@ -64,6 +69,6 @@ import { InformationPopoverComponent } from './components/chapter/information-po
     AuthService
   ],
   bootstrap: [AppComponent],
-  exports: [CharacterPopoverComponent, PlacePopoverComponent, ChapterActionPopoverComponent, InformationPopoverComponent]
+  exports: [CharacterPopoverComponent, PlacePopoverComponent, ChapterActionPopoverComponent, InformationPopoverComponent, FavoritesComponent, FavoritesListComponent]
 })
 export class AppModule {}

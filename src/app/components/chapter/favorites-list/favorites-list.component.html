@@ -1,0 +1,5 @@
+<ion-list>
+  <ion-item *ngFor="let info of favorites; let i = index" (click)="onClick(i)">
+    <ion-label>{{info.name}}</ion-label>
+  </ion-item>
+</ion-list>

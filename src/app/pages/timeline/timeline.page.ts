@@ -1,3 +1,4 @@
+import { Chapter } from './../../models/chapter';
 import { Component, OnInit } from '@angular/core';
 import { ToastController, DomController, Events, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
@@ -7,6 +8,7 @@ import { CDate } from '../../models/cdate';
 
 import { TimelineService } from '../../services/timeline.service';
 import { StoriesService } from '../../services/stories.service';
+import { ChapterService } from '../../services/chapter.service';
 
 @Component({
   selector: 'app-timeline',
@@ -23,10 +25,12 @@ export class TimelinePage implements OnInit {
   private max_date: CDate = null;
   private timeline_values: string[] = [];
   private new_option: TimelineOption = new TimelineOption(null,null,0,"");
+  private chapters: Chapter[] = [];
 
   constructor(
     private timelineService: TimelineService,
     private storiesService: StoriesService,
+    private chapterService: ChapterService,
     private events: Events,
     private route: ActivatedRoute,
     private navCtrl: NavController) {
@@ -37,6 +41,11 @@ export class TimelinePage implements OnInit {
   }
 
   ngOnInit() {
+    this.initialise();
+  }
+
+  //initialise functions
+  private initialise() {
     this.story_id = this.route.snapshot.paramMap.get('key');
     this.storiesService.getStoryInfoFromKey(this.story_id).subscribe(
       res => {
@@ -47,11 +56,6 @@ export class TimelinePage implements OnInit {
         console.log(err);
       }
     );
-    this.initialise();
-  }
-
-  //initialise functions
-  private initialise() {
     this.timelineService.getOptionFromStory(this.story_id).subscribe(res => {
       if (res == null) {
         this.newOption();
@@ -59,16 +63,17 @@ export class TimelinePage implements OnInit {
         this.option = new TimelineOption(res.id, res.story_id, res.scale, res.date_format);
       }
       this.new_option = new TimelineOption(this.option.id, this.option.story_id, this.option.scale, this.option.date_format);
-      //console.log(this.option);
     });
     this.timelineService.getEventsFromStory(this.story_id).subscribe(res => {
       this.t_events = res;
-      //console.log(res);
-    });
-    this.timelineService.getPeriodsFromStory(this.story_id).subscribe(res => {
-      this.t_periods = res;
-      //console.log(res);
-      this.defineTimeline();
+      this.timelineService.getPeriodsFromStory(this.story_id).subscribe(res => {
+        this.t_periods = res;
+        this.chapterService.getByStoryId(this.story_id).subscribe(res => {
+          this.chapters = res;
+          console.log(this.chapters);
+          this.defineTimeline();
+        });
+      });
     });
   }
 
@@ -86,11 +91,13 @@ export class TimelinePage implements OnInit {
     this.calcMinAndMax();
     this.timeline_values = [];
     if (this.option.date_format == 'year') {
-      for (let i = this.min_date.year; i <= this.max_date.year; i += this.option.scale) {
-        if (i > this.max_date.year) {
-          this.timeline_values.push(this.max_date.year.toString());
-        } else {
-          this.timeline_values.push(i.toString());
+      if (this.min_date != null) {
+        for (let i = this.min_date.year; i <= this.max_date.year; i += this.option.scale) {
+          if (i > this.max_date.year) {
+            this.timeline_values.push(this.max_date.year.toString());
+          } else {
+            this.timeline_values.push(i.toString());
+          }
         }
       }
     }
@@ -98,7 +105,8 @@ export class TimelinePage implements OnInit {
 
   private getStyleValue(index: number) {
     let max_width = this.max_date.getDays() - this.min_date.getDays();
-    let one_value = (((max_width / this.timeline_values.length) * 100) / max_width) * this.option.scale;let window_width = window.innerWidth;
+    let one_value = (((max_width / this.timeline_values.length) * 100) / max_width) * this.option.scale;
+    let window_width = window.innerWidth;
 
     let window_height = window.innerHeight;
     if (window_width >= window_height) {
@@ -152,6 +160,49 @@ export class TimelinePage implements OnInit {
 
         if (this.max_date.getDays() < item_value.getDays()) {
           this.max_date = item_value;
+        }
+      }
+    });
+
+    /*this.chapters.forEach(chapter => {
+      let item_min_value = new CDate(chapter.start.year, chapter.start.month, chapter.start.day);
+      let item_max_value = new CDate(chapter.end.year, chapter.end.month, chapter.end.day);
+
+      if (this.min_date == null) {
+        this.min_date = item_min_value;
+        this.max_date = item_max_value;
+      } else {
+        if (this.min_date.getDays() > item_min_value.getDays()) {
+          this.min_date = item_min_value;
+        }
+  
+        if (this.max_date.getDays() < item_max_value.getDays()) {
+          this.max_date = item_max_value;
+        }
+      }
+
+      if (chapter.children != null) {
+        this.calcMinAndMaxChap(chapter);
+      }
+    });*/
+  }
+
+
+  private calcMinAndMaxChap(chapter: Chapter) {
+    chapter.children.forEach(child => {
+      let item_min_value = new CDate(child.start.year, child.start.month, child.start.day);
+      let item_max_value = new CDate(child.end.year, child.end.month, child.end.day);
+
+      if (this.min_date == null) {
+        this.min_date = item_min_value;
+        this.max_date = item_max_value;
+      } else {
+        if (this.min_date.getDays() > item_min_value.getDays()) {
+          this.min_date = item_min_value;
+        }
+  
+        if (this.max_date.getDays() < item_max_value.getDays()) {
+          this.max_date = item_max_value;
         }
       }
     });

@@ -5,6 +5,7 @@ export class Information {
     size: number;
     canModify: boolean;
     searchValues: string[];
+    id: string;
 
     constructor(information: {}) {
         this.label = information["label"] || null;
@@ -13,6 +14,7 @@ export class Information {
         this.size = information["size"] || null;
         this.canModify = information["canModify"];
         this.searchValues = information["searchValues"] || null;
+        this.id = information["id"] || null;
     }
 
     public getDatasToJSON() {
@@ -22,7 +24,8 @@ export class Information {
             value: this.value,
             size: this.size,
             canModify: this.canModify,
-            searchValues: this.searchValues
+            searchValues: this.searchValues,
+            id: this.id
         }
     }
 }

@@ -9,22 +9,21 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)">
-  <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+<ion-content>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="displayCreateHistory()">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <!--<ion-row class="main-title">
+  <ion-row class="main-title">
     <ion-col size="12" class="title">
       <p class="text">Mes histoires</p>
     </ion-col>
     <ion-col size="12" class="image">
       <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
     </ion-col>
-  </ion-row>-->
+  </ion-row>
   
   <ion-row class="content-story">
     <ion-col [size]="colSize" *ngFor="let key of keys; let i = index" id="history_{{key}}" class="story-col" [ngStyle]="defineHeightStories()">
@@ -40,10 +39,99 @@
       </div>
     </ion-col>
   </ion-row>
+  
+
+  <ion-row class="main-title">
+    <ion-col size="12" class="image reversed">
+      <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+    </ion-col>
+    <ion-col size="12" class="title">
+      <p class="text">Outils</p>
+    </ion-col>
+    <ion-col size="12" class="image">
+      <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+    </ion-col>
+  </ion-row>
  
-  <!--<ion-fab right bottom>
-    <input type="file" (change)="addImage($event)" />
-  </ion-fab>-->
+  <ion-row>
+    <ion-col size="12">
+      <ion-button color="primary" color="secondary" (click)="displayResetPassword()" expand="block" class="rounded">Changer de mot de passe</ion-button>
+    </ion-col>
+    <ion-col size="12">
+      <ion-button color="primary" color="secondary" (click)="displayStoryToExport()" expand="block" class="rounded">Exporter une histoire</ion-button>
+    </ion-col>
+    <ion-col size="12">
+      <!--<button class="rounded" #filePicker="ngxFilePicker" [ngxFilePicker]="readMode" accept="json/*" (filePick)="onFilePicked($event)" (readEnd)="importStory($event)">Importer une histroire</button>-->
+      <div class="import-story">
+        <input class="input-json-file" id="my-json-file" type="file" (change)="importStory($event)" accept=".json">
+        <label for="my-json-file" class="input-json-file-trigger" tabindex="0">Importer une histoire</label>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <!--Change password-->
+  <div class="change-password" id="change_password">
+    <div class="black-screen"></div>
+    <ion-card class="content">
+      <ion-row class="main-title">
+        <ion-col size="12" class="title">
+          <p class="text">Changer de mot de passe</p>
+        </ion-col>
+        <ion-col size="12" class="image">
+          <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+        </ion-col>
+      </ion-row>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="12">
+            <p>En voulant changer votre mot de passe, vous allez être déconnécté. Voulez-vous changer de mot de passe ?</p>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button color="danger" fill="outline" (click)="hideResetPassword()">Non</ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button color="primary" fill="outline" (click)="confirmResetPassword()">Oui</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!--Story to download window-->
+  <div class="download-story" id="download_story">
+    <ion-card class="container">
+      <ion-row class="main-title">
+        <ion-col size="12" class="title">
+          <p class="text">Histoire à télécharger</p>
+        </ion-col>
+        <ion-col size="12" class="image">
+          <ion-img src="assets/imgs/cloud.png" class="cloud"></ion-img>
+        </ion-col>
+      </ion-row>
+      <ion-card-content>
+        <ion-row class="stories">
+          <ion-col [size]="colSize" *ngFor="let key of keys; let i = index" class="story-col">
+            <ion-card class="history" (click)="selectStoryToExport(key)">
+              <ion-img *ngIf="backgroundImages[key] != null" src="{{backgroundImages[key]}}" class="img-background"></ion-img>
+              <ion-card-content class="title-card">
+                <p>{{files[key].title}}</p>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="6">
+            <ion-button color="danger" fill="outline" (click)="hideStoryToExport()">Annuler</ion-button>
+          </ion-col>
+          <ion-col size="6" *ngIf="storyToDownload != null">
+            <a [href]="fileUrl" [download]="nameStoryToDownload">Télécharger</a>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!--Create story-->
   <div class="create-history" id="create_new_story">
     <ion-card class="container">
       <ion-row class="main-title">
@@ -109,6 +197,7 @@
     </ion-card>
   </div>
 
+  <!--Stories list images from firebase-->
   <div class="image-list" id="image_list">
     <ion-card class="container">
       <ion-title>Liste d'image</ion-title>
@@ -130,6 +219,7 @@
     </ion-card>
   </div>
 
+  <!--Delete Story-->
   <div class="delete" id="delete_container">
     <ion-card class="container">
       <ion-title>Etes-vous sûr de vouloir supprimer votre histoire ?</ion-title>

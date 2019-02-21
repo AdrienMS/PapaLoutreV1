@@ -24,7 +24,7 @@ export class Chapter extends TimelinePeriod {
         level: number,
         progression: number,
         write: string,
-        i_parents: number[]
+        i_parents: number[] = null
     ) {
         super(id, story_id, name, description, type, start, end);
         if (informations == null) {

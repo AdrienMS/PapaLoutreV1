@@ -123,7 +123,9 @@ export class TimelineService {
         let eventToReturn: TimelineEvent[] = [];
         if (res != null) {
           Object.keys(res).forEach(key => {
-            eventToReturn.push(res[key]);
+            if (res[key].story_id == story_id) {
+              eventToReturn.push(res[key]);
+            }
           });
         }
         observer.next(eventToReturn);
@@ -207,7 +209,9 @@ export class TimelineService {
         let periodToReturn: TimelinePeriod[] = [];
         if (res != null) {
           Object.keys(res).forEach(key => {
-            periodToReturn.push(res[key]);
+            if (res[key].story_id == story_id) {
+              periodToReturn.push(res[key]);
+            }
           });
         }
         observer.next(periodToReturn);

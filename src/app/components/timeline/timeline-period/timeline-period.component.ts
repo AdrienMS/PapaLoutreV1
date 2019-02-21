@@ -4,6 +4,7 @@ import { Directive, Input, ElementRef, Renderer, Output, EventEmitter } from '@a
 import { DomController, PopoverController, NavController } from '@ionic/angular';
 
 import { TimelineEvent, TimelinePeriod, TimelineDate, TimelineOption } from '../../../models/timeline';
+import { Chapter } from '../../../models/chapter';
 import { CDate } from '../../../models/cdate';
 
 @Component({
@@ -15,6 +16,7 @@ export class TimelinePeriodComponent implements OnInit {
   @Input('period_id') id_period: number;
   @Input('allEvent') all_events: TimelineEvent[];
   @Input('allPeriod') all_periods: TimelinePeriod[];
+  @Input('allChapter') all_chapters: Chapter[];
   @Input('option') option: TimelineOption;
 
   private t_period: TimelinePeriod;
@@ -82,10 +84,46 @@ export class TimelinePeriodComponent implements OnInit {
       }
     });
 
+    this.all_chapters.forEach(chapter => {
+      let item_min_value = new CDate(chapter.start.year, chapter.start.month, chapter.start.day);
+      let item_max_value = new CDate(chapter.end.year, chapter.end.month, chapter.end.day);
+
+      if (this.min_date.getDays() > item_min_value.getDays()) {
+        this.min_date = item_min_value;
+      }
+
+      if (this.max_date.getDays() < item_max_value.getDays()) {
+        this.max_date = item_max_value;
+      }
+
+      if (chapter.children != null && chapter.children.length > 0) {
+        this.clacMinAdnMaxChild(chapter);
+      }
+    });
+
     this.min_date.day = 1;
     this.min_date.month = 1;
     this.max_date.day = 31;
     this.max_date.month = 12;
+  }
+
+  private clacMinAdnMaxChild(chapter) {
+    chapter.children.forEach(child => {
+      let item_min_value = new CDate(child.start.year, child.start.month, child.start.day);
+      let item_max_value = new CDate(child.end.year, child.end.month, child.end.day);
+
+      if (this.min_date.getDays() > item_min_value.getDays()) {
+        this.min_date = item_min_value;
+      }
+
+      if (this.max_date.getDays() < item_max_value.getDays()) {
+        this.max_date = item_max_value;
+      }
+
+      if (child.children != null && child.children.length > 0) {
+        this.clacMinAdnMaxChild(child);
+      }
+    });
   }
 
   private calcWidth() {
@@ -99,6 +137,12 @@ export class TimelinePeriodComponent implements OnInit {
   private calcPosTop() {
     this.all_periods.forEach(period => {
       let item_value = new CDate(period.start.year, period.start.month, period.start.day);
+      if (item_value.getDays() < this.min_date_period.getDays()) {
+        this.line += 1;
+      }
+    });
+    this.all_chapters.forEach(chapter => {
+      let item_value = new CDate(chapter.start.year, chapter.start.month, chapter.start.day);
       if (item_value.getDays() < this.min_date_period.getDays()) {
         this.line += 1;
       }

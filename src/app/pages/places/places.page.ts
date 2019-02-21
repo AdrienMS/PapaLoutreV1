@@ -40,6 +40,11 @@ export class PlacesPage implements OnInit {
   }
 
   ngOnInit() {
+    this.initialise();
+  }
+
+  /*Initilise functions*/
+  private initialise() {
     this.id = this.route.snapshot.paramMap.get('key');
     this.storiesService.getStoryInfoFromKey(this.id).subscribe(
       res => {
@@ -51,11 +56,6 @@ export class PlacesPage implements OnInit {
         console.log(err);
       }
     );
-    this.initialise();
-  }
-
-  /*Initilise functions*/
-  private initialise() {
     this.placesService.getPlacesFromStory(this.id).subscribe(res => {
       this.places = res;
       console.log(this.places);

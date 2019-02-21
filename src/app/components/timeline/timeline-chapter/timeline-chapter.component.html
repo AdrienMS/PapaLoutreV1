@@ -1,0 +1,38 @@
+<div class="period" [ngStyle]="getStylePeriod()" (click)="displayCard()">
+  {{t_period.name}}
+  <ion-card class="informations" *ngIf="t_period != null" id="informations_{{t_period.id}}" [ngStyle]="getStyleCard()">
+    <ion-card-title>
+      {{t_period.name}}
+    </ion-card-title>
+    <ion-card-content>
+      <ion-row>
+        <ion-col size="6">
+          <ng-container *ngIf="t_period.start.format == 'DD/MM/YYYY'">{{t_period.start.day}}/</ng-container>
+          <ng-container *ngIf="t_period.start.format != 'YYYY'">{{t_period.start.month}}/</ng-container>
+          {{t_period.start.year}}
+        </ion-col>
+        <ion-col size="6">
+          <ng-container *ngIf="t_period.end.format == 'DD/MM/YYYY'">{{t_period.end.day}}/</ng-container>
+          <ng-container *ngIf="t_period.end.format != 'YYYY'">{{t_period.end.month}}/</ng-container>
+          {{t_period.end.year}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          {{t_period.description}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <ion-button fill="clear" [routerLink]="['/add-timeline-period/'+t_period.story_id+'/'+t_period.id]"><ion-icon name="create"></ion-icon></ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button fill="clear" (click)="delete()"><ion-icon name="trash"></ion-icon></ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</div>
+<ng-container *ngIf="t_period.children != null && t_period.children.length > 0">
+  <app-timeline-chapter *ngFor="let item of t_period.children; let i = index" [period_id]="i" [allEvent]="all_events" [allPeriod]="all_periods" [allChapter]="t_period.children" [option]="option"></app-timeline-chapter>
+</ng-container>

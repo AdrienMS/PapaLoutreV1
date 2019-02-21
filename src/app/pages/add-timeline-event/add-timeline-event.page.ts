@@ -22,6 +22,8 @@ export class AddTimelineEventPage implements OnInit {
     private route: ActivatedRoute,
     private toast: ToastController,
     private navCtrl: NavController) {
+      this.story_id = this.route.snapshot.paramMap.get('story_id');
+      this.event_id = this.route.snapshot.paramMap.get('event_id');
       this.initialise();
     /*events.subscribe('currentUser', value => {
       this.initialise();
