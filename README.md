@@ -22,10 +22,6 @@ npm install -g ionic
 
 - Android studio & android SDK (see https://developer.android.com/studio/)
 
-```
-until finished
-```
-
 Then clone the repository:
 
 ```
@@ -34,7 +30,8 @@ cd PapaLoutre
 npm install
 ```
 
-If you want to install the app in you android device, you can put the apk located at https://github.com/AdrienMS/PapaLoutre/blob/master/apk/app-release-unsigned.apk in you phone
+If you want to install the app in you android device, you can put the apk located at https://github.com/AdrienMS/PapaLoutre/blob/master/apk/app-release-unsigned.apk in your phone.
+If you want to check te demo on browser : https://papaloutre-dadc5.firebaseapp.com/home
 
 ## Running
 
